@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/garage_name"
+        android:id="@+id/textView1"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:paddingStart="15dp"
+        android:paddingTop="10dp"
+        android:textSize="18sp"
+        android:gravity="center_vertical"
+        android:layout_toStartOf="@+id/button"
+        android:layout_alignParentLeft="true"
+        android:paddingLeft="15dp"
+        android:layout_toLeftOf="@+id/button"
+        android:textColor="@android:color/primary_text_light" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/garage_addr"
+        android:id="@+id/textView2"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/textView1"
+        android:paddingStart="15dp"
+        android:minHeight="34dp"
+        android:textSize="13sp"
+        android:gravity="center_vertical"
+        android:layout_toStartOf="@+id/button"
+        android:paddingTop="2dp"
+        android:layout_alignParentLeft="true"
+        android:paddingLeft="15dp"
+        android:layout_toLeftOf="@+id/button"
+        android:textColor="@color/background_floating_material_dark" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/garage_dist"
+        android:id="@+id/textView3"
+        android:paddingStart="15dp"
+        android:minHeight="34dp"
+        android:textSize="13sp"
+        android:gravity="center_vertical"
+        android:paddingBottom="5dp"
+        android:layout_below="@+id/textView2"
+        android:layout_alignParentStart="true"
+        android:layout_toStartOf="@+id/button"
+        android:paddingLeft="15dp"
+        android:layout_alignParentLeft="true"
+        android:layout_toLeftOf="@+id/button"
+        android:textColor="@color/background_floating_material_dark" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/button"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:text="@string/call_button"
+        android:drawableTop="@drawable/ic_phone_black_24dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignBottom="@+id/textView3"
+        android:background="?attr/selectableItemBackground"
+        android:paddingTop="25dp"
+        android:paddingBottom="18dp"/>
+
+</RelativeLayout>
