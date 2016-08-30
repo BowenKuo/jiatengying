@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:weightSum="1">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="裕銘發保養廠"
+        android:textSize="25dp"
+        android:id="@+id/name"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="80dp"
+        android:textStyle="bold"
+        android:textColor="#1e6a4d" />
+
+    <TableLayout
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="200dp"
+        android:id="@+id/tableLayout">
+
+        <TableRow android:layout_height="40dp"
+            android:gravity="center" >
+
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:id="@+id/phoneImage"
+                android:src="@drawable/ic_phone"/>
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="0936289756"
+                android:paddingLeft="5dp"
+                android:textSize="20dp"
+                android:layout_column="2"
+                android:id="@+id/phone" />
+        </TableRow>
+
+        <TableRow android:layout_height="40dp"
+            android:gravity="center" >
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:id="@+id/locationImage"
+                android:src="@drawable/ic_location"/>
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="高雄市燕巢區安招路439巷2號"
+                android:paddingLeft="5dp"
+                android:textSize="20dp"
+                android:layout_column="2"
+                android:id="@+id/location" />
+        </TableRow>
+
+        <TableRow android:layout_height="40dp"
+            android:gravity="center"
+            android:id="@+id/star">
+
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:id="@+id/starImage"
+                android:src="@drawable/ic_star"/>
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="三顆星"
+                android:paddingLeft="5dp"
+                android:textSize="20dp"
+                android:layout_column="2" />
+        </TableRow>
+
+
+    </TableLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="相關評論"
+        android:textSize="25dp"
+        android:id="@+id/commet"
+        android:layout_below="@+id/tableLayout"
+        android:layout_marginTop="12dp"
+        android:layout_marginLeft="80dp"
+        android:textStyle="bold"
+        android:textColor="#1e6a4d" />
+
+    <ListView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/showComment"
+        android:layout_below="@+id/commet"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="10dp" />
+
+
+</RelativeLayout>

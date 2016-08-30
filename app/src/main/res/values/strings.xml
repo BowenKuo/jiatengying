@@ -17,4 +17,30 @@
     <string name="garage_addr">車廠地址</string>
     <string name="garage_dist">車廠距離</string>
     <string name="call_button">撥打電話</string>
+
+    <string name="listview_name">車廠名稱</string>
+    <string name="listview_address">車廠地址</string>
+    <string name="listview_dist">車廠距離</string>
+    <string name="listview_call_btn">撥打電話</string>
+    <string name="debug_service_info">連線資訊</string>
+
+    <string name="info_name">@string/listview_name</string>
+    <string name="info_address">@string/listview_address</string>
+    <string name="info_phone">車廠電話</string>
+
+    <string name="info_offer_label">優惠</string>
+    <string name="info_comment_label">相關評論</string>
+
+    <string name="comment_name">評論者</string>
+    <string name="comment_time">2016年12月26日 12:05 PM  ·  2 ★</string>
+    <string name="comment_content">評論內容</string>
+    <string name="comment_no_data">目前沒有關於保養廠的評論喔</string>
+    <string name="comment_write_btn">撰寫評論</string>
+    <string name="comment_like_level">您對保養廠的滿意程度</string>
+    <string name="comment_add_comment">寫下您對保養廠的評論</string>
+
+    <string name="coupon_name">優惠名稱</string>
+    <string name="coupon_time">優惠期限</string>
+    <string name="coupon_content">優惠內容</string>
+    <string name="coupon_no_data">目前沒有優惠活動</string>
 </resources>

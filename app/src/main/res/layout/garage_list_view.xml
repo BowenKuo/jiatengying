@@ -69,6 +69,8 @@
         android:layout_alignBottom="@+id/textView3"
         android:background="?attr/selectableItemBackground"
         android:paddingTop="25dp"
-        android:paddingBottom="18dp"/>
+        android:paddingBottom="18dp"
+        android:focusable="false"
+        android:focusableInTouchMode="false"/>
 
 </RelativeLayout>

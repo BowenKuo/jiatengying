@@ -69,9 +69,6 @@ public class LoginActivity extends Activity {
         btnLogin.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View view) {
-                Intent intent = new Intent(LoginActivity.this,MainActivity.class);
-                startActivity(intent);
-                finish();
 
                 String email = inputEmail.getText().toString().trim();
                 String password = inputPassword.getText().toString().trim();
@@ -89,6 +86,10 @@ public class LoginActivity extends Activity {
                             "Please enter the credentials!", Toast.LENGTH_LONG)
                             .show();
                 }
+
+                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                startActivity(intent);
+                finish();
             }
 
         });

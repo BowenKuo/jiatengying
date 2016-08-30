@@ -4,12 +4,62 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
+<!--
+    <ImageView
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/car"
+        android:src="@drawable/car"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="380dp" />
 
     <TextView
-        android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:text="Car Info"
-        android:textAppearance="?android:attr/textAppearanceLarge"/>
+        android:text="健康"
+        android:id="@+id/car_condition"
+        android:layout_alignBottom="@+id/car"
+        android:layout_centerHorizontal="true"
+        android:textSize="20dp"
+        android:textColor="#4d9867"
+        android:layout_marginTop="20dp" />
+
+    <TableRow
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignLeft="@+id/car"
+        android:layout_alignStart="@+id/car"
+        android:layout_marginBottom="40dp"
+        android:gravity="center"
+        android:id="@+id/tableRow">
+
+        <ImageButton
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:id="@+id/dashboard"
+            android:src="@drawable/ic_dashboard_green"
+            android:background="@null"
+
+            android:layout_column="1"
+            android:layout_alignTop="@+id/tableRow"
+            android:layout_toLeftOf="@+id/tableRow"
+            android:layout_toStartOf="@+id/tableRow" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="儀錶板"
+            android:id="@+id/dashboardtext"
+            android:layout_alignBottom="@+id/dashboard"
+            android:layout_toRightOf="@+id/dashboard"
+            android:layout_toEndOf="@+id/dashboard"
+            android:layout_gravity="center_vertical"
+            android:layout_marginBottom="10dp"
+            android:textSize="20dp"
+            android:layout_column="2"/>
+
+    </TableRow>
+-->
 </RelativeLayout>

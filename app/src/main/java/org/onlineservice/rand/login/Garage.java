@@ -1,13 +1,15 @@
 package org.onlineservice.rand.login;
 
-import android.os.AsyncTask;
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -23,12 +25,15 @@ import java.util.HashMap;
 /**
  * Created by Lillian Wu on 2016/7/20.
  */
-public class Garage extends Fragment implements SwipeRefreshLayout.OnRefreshListener{
+public class Garage extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
     private final static String LOG_TAG = "Garage";
     private ListView listView;
     private TextView serviceInfo;
     private SwipeRefreshLayout swipeLayout;
+
+    private NetworkHelper  networkHelper;
+    private LocationHelper locationHelper;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.activity_garage, container, false);
@@ -46,121 +51,115 @@ public class Garage extends Fragment implements SwipeRefreshLayout.OnRefreshList
             @Override
             public void run() {
                 swipeLayout.setRefreshing(true);
-                new AsyncTaskHttpGET().execute();
+                loadUI();
             }
         });
 
         return view;
     }
 
+    private void loadUI() {
+        HashMap<String, String> params = new HashMap<String, String>();
+
+        networkHelper  = new NetworkHelper();
+        locationHelper = new LocationHelper(getActivity());
+
+        String provider  = locationHelper.getServiceProvider();
+        double latitude  = locationHelper.getLatitude();
+        double longitude = locationHelper.getLongitude();
+
+        if (latitude != 0.0 && longitude != 0.0) {
+            serviceInfo.setText("Locate via " + provider + ": (" + latitude + ", " + longitude + ")");
+            Log.d(LOG_TAG, "provider: " + provider + ", " + "coordinate: (" + latitude + ", " + longitude + ")");
+
+            params.put("latitude" , "" + latitude );
+            params.put("longitude", "" + longitude);
+
+            networkHelper.sendCoordinateData(params);
+
+            new Handler().postDelayed(
+                    new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                String response = networkHelper.getNearbyGarage();
+
+                                if (response != null) {
+                                    JSONObject jsonObject = new JSONObject(response);
+
+                                    if (jsonObject.getString("status").equals("ok") && jsonObject.getJSONArray("data").length() > 0) {
+                                        JSONArray data_map = jsonObject.getJSONArray("data");
+
+                                        final ArrayList<HashMap<String, String>> responseList = new ArrayList<HashMap<String, String>>();
+
+                                        for (int i = 0; i < data_map.length(); i++) {
+                                            JSONObject data = data_map.getJSONObject(i);
+
+                                            String id       = data.getString("ID");
+                                            String name     = data.getString("NAME");
+                                            String address  = data.getString("ADDRESS");
+                                            String phone    = data.getString("PHONE");
+                                            String lat      = data.getString("LAT");
+                                            String lng      = data.getString("LNG");
+                                            String distance = data.getString("DIST_IN_KM");
+
+                                            HashMap<String, String> node = new HashMap<>();
+                                            node.put("ID"     , id      );
+                                            node.put("NAME"   , name    );
+                                            node.put("ADDRESS", address );
+                                            node.put("PHONE"  , phone   );
+                                            node.put("LAT"    , lat     );
+                                            node.put("LNG"    , lng     );
+                                            node.put("DIST"   , distance);
+
+                                            responseList.add(node);
+                                        }
+
+                                        ListAdapter mAdapter = new GarageListAdapter(getActivity(), responseList);
+                                        listView.setAdapter(mAdapter);
+                                        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                            @Override
+                                            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                                                Intent intent = new Intent(getActivity(), GarageInfoActivity.class);
+                                                Bundle bundle = new Bundle();
+
+                                                bundle.putString("ID"     , responseList.get(i).get("ID"     ));
+                                                bundle.putString("NAME"   , responseList.get(i).get("NAME"   ));
+                                                bundle.putString("ADDRESS", responseList.get(i).get("ADDRESS"));
+                                                bundle.putString("PHONE"  , responseList.get(i).get("PHONE"  ));
+
+                                                intent.putExtras(bundle);
+
+                                                startActivity(intent);
+                                            }
+                                        });
+
+                                        swipeLayout.setRefreshing(false);
+                                    }
+                                    else {
+                                        Toast.makeText(getActivity(), "抱歉，資料發生錯誤，請稍候再試", Toast.LENGTH_LONG).show();
+                                        Log.e(LOG_TAG, "loadUI: Format error");
+                                    }
+                                }
+                                else {
+                                    Toast.makeText(getActivity(), "抱歉，伺服器沒有回應，請稍候再試", Toast.LENGTH_LONG).show();
+                                    Log.e(LOG_TAG, "loadUI: No response");
+                                }
+                            } catch (JSONException e) {
+                                Log.e(LOG_TAG, "JSONE" + e.getMessage());
+                            }
+                        }
+                    }, 1000);
+            swipeLayout.setRefreshing(false);
+        }
+        else {
+            Log.e(LOG_TAG, "loadUI: No coordinate");
+        }
+    }
+
     @Override
     public void onRefresh() {
-        new AsyncTaskHttpGET().execute();
+        loadUI();
     }
-
-    private class AsyncTaskHttpGET extends AsyncTask<Void, Void, String> {
-
-        private final static String LOG_TAG = "AsyncTaskHttpGET";
-        private HashMap<String, String> params = new HashMap<String, String>();
-        private NetworkHelper netHelper;
-        private LocationHelper locationHelper = new LocationHelper(getActivity());
-        private ArrayList<HashMap<String, String>> responseList = new ArrayList<HashMap<String, String>>();;
-
-        private String serviceProvider;
-        private double latitude;
-        private double longitude;
-
-        public AsyncTaskHttpGET() { }
-
-        @Override
-        protected void onPreExecute(){
-            super.onPreExecute();
-
-            this.serviceProvider = this.locationHelper.getServiceProvider();
-            this.latitude        = this.locationHelper.getLatitude();
-            this.longitude       = this.locationHelper.getLongitude();
-
-            this.params.put("latitude" , "" + this.latitude );
-            this.params.put("longitude", "" + this.longitude);
-
-            serviceInfo.setText("Locate via " + this.serviceProvider + ": (" + this.latitude + ", " + this.longitude + ")");
-            Log.d(LOG_TAG, "provider: " + this.serviceProvider + ", " + "coordinate: (" + this.latitude + ", " + this.longitude + ")");
-        }
-
-        @Override
-        protected String doInBackground(Void... voids) {
-            netHelper = new NetworkHelper();
-            String response = "";
-
-            if (!this.params.get("latitude").equals("0.0") && !this.params.get("longitude").equals("0.0")) {
-                // Parse JSON
-                try {
-                    netHelper.sendSensorData(this.params);
-                    response = netHelper.getGETResponse();
-
-                    if (response != "") {
-                        JSONObject jsonObject = new JSONObject(response);
-                        if (jsonObject.getString("status").equals("ok")) {
-
-                            JSONArray garageData = jsonObject.getJSONArray("data");
-
-                            for (int index = 0; index < garageData.length(); index++) {
-                                JSONObject sub = garageData.getJSONObject(index);
-
-                                String name = sub.getString("NAME");
-                                String address = sub.getString("ADDRESS");
-                                String phone = sub.getString("PHONE");
-                                String latitude = sub.getString("LAT");
-                                String longitude = sub.getString("LNG");
-                                String distance = sub.getString("DIST_IN_KM");
-
-                                HashMap<String, String> garage = new HashMap<>();
-                                garage.put("NAME", name);
-                                garage.put("ADDRESS", address);
-                                garage.put("PHONE", phone);
-                                garage.put("LAT", latitude);
-                                garage.put("LNG", longitude);
-                                garage.put("DIST", distance);
-
-                                responseList.add(garage);
-                            }
-                        } else {
-                            Log.e(LOG_TAG, "Data Format Error");
-                            return null;
-                        }
-                    }
-                    else {
-                        Log.e(LOG_TAG, "AsyncTaskHttpGET: No response");
-                    }
-                } catch (JSONException e) {
-                    Log.e(LOG_TAG, "AsyncTaskHttpGET: JSONE: " + e.getMessage());
-                    Log.e(LOG_TAG, "AsyncTaskHttpGET: Response: " + response);
-                }
-            }
-            else {
-                Log.e(LOG_TAG, "AsyncTaskHttpGET: No coordinate");
-            }
-            return response;
-        }
-
-        @Override
-        protected void onPostExecute(String content) {
-            super.onPostExecute(content);
-            update(responseList);
-        }
-    }
-
-    private void update(ArrayList<HashMap<String, String>> list_map) {
-
-        ListAdapter mAdapter = new GarageListAdapter(getActivity(), list_map);
-        listView.setAdapter(mAdapter);
-
-        if (list_map.size() == 0) {
-            Toast.makeText(getActivity(), "無法取得資料，請稍候再試", Toast.LENGTH_LONG).show();
-        }
-
-        swipeLayout.setRefreshing(false);
-    }
-
 
 }

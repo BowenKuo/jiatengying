@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/relativeLayout"
+        android:background="@android:color/white"
+        android:elevation="1dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="@string/info_name"
+            android:id="@+id/info_name"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true"
+            android:minHeight="40dp"
+            android:layout_alignParentEnd="true"
+            android:paddingStart="20dp"
+            android:gravity="center_vertical"
+            android:textSize="18sp"
+            android:paddingTop="10dp"
+            android:layout_marginBottom="3dp"
+            android:layout_marginTop="5dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentRight="true"
+            android:paddingLeft="20dp" />
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/info_name"
+            android:layout_alignParentStart="true"
+            android:paddingStart="20dp"
+            android:id="@+id/linearLayout"
+            android:minHeight="30dp"
+            android:gravity="center_vertical"
+            android:layout_alignParentLeft="true"
+            android:paddingLeft="20dp">
+
+            <RatingBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/ratingBar"
+                android:numStars="5"
+                android:stepSize="0.1"
+                style="?android:attr/ratingBarStyleSmall"/>
+        </LinearLayout>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/info_address"
+            android:id="@+id/info_location_btn"
+            android:layout_below="@+id/linearLayout"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:background="?attr/selectableItemBackground"
+            android:drawableLeft="@drawable/ic_location_on_black_24dp"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:gravity="left|center_vertical"
+            android:drawablePadding="15dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentRight="true" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/info_phone"
+            android:id="@+id/info_call_btn"
+            android:background="?attr/selectableItemBackground"
+            android:layout_below="@+id/info_location_btn"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:drawableLeft="@drawable/ic_phone_black_24dp"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:gravity="left|center_vertical"
+            android:drawablePadding="15dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentRight="true" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/relativeLayout"
+        android:layout_marginTop="10dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="@string/info_offer_label"
+            android:id="@+id/info_offer_label"
+            android:textSize="12sp"
+            android:minHeight="30dp"
+            android:gravity="center_vertical"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:textColor="@android:color/black"
+            android:background="@color/color_white"
+            android:elevation="1dp"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/coupon_recycler_view"
+                android:scrollbars="none"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="@string/coupon_no_data"
+                android:id="@+id/coupon_no_data_prompt"
+                android:paddingStart="20dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:textSize="14sp"
+                android:visibility="invisible"
+                android:elevation="10dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentEnd="true"
+                android:paddingLeft="20dp"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentRight="true" />
+        </RelativeLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="@string/info_comment_label"
+            android:id="@+id/info_comment_label"
+            android:textSize="12sp"
+            android:minHeight="30dp"
+            android:gravity="center_vertical"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:textColor="@android:color/black"
+            android:background="@color/color_white"
+            android:elevation="1dp"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="fill_parent">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/comment_recycler_view"
+                android:scrollbars="none"
+                android:layout_width="match_parent"
+                android:layout_height="fill_parent"
+                android:layout_marginTop="10dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="@string/comment_no_data"
+                android:id="@+id/comment_no_data_prompt"
+                android:layout_alignParentStart="true"
+                android:paddingStart="20dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:textSize="14sp"
+                android:visibility="invisible"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentLeft="true"
+                android:paddingLeft="20dp"
+                android:layout_alignParentRight="true" />
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:elevation="5dp"
+        android:layout_gravity="bottom|end"
+        android:src="@drawable/ic_mode_edit_white_24dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="20dp"
+        app:fabSize="normal"
+        app:rippleColor="@color/colorAccentDark"/>
+
+</RelativeLayout>
