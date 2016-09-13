@@ -43,4 +43,10 @@
     <string name="coupon_time">優惠期限</string>
     <string name="coupon_content">優惠內容</string>
     <string name="coupon_no_data">目前沒有優惠活動</string>
+
+    <!-- CarInfo String Resource -->
+    <string name="dtcHistoryTitle">故障碼歷史紀錄</string>
+    <string name="status_not_connect">藍芽未連接</string>
+    <string name="status_healthy">健康</string>
+    <string name="status_not_healthy">故障</string>
 </resources>

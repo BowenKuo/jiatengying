@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="org.onlineservice.rand.login.MainActivity">
+
+    <org.onlineservice.rand.login.ScalableFrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/radiator"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:visibility="gone"
+        android:layout_alignParentLeft="true" />
+
+    <org.onlineservice.rand.login.ScalableFrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/fuelLow"
+        android:layout_below="@+id/radiator"
+        android:layout_alignParentStart="true"
+        android:visibility="gone"
+        android:layout_alignParentLeft="true" />
+
+    <org.onlineservice.rand.login.ScalableFrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/dLight"
+        android:layout_below="@+id/radiator"
+        android:layout_alignParentStart="true"
+        android:visibility="gone"
+        android:layout_alignParentLeft="true" />
+
+    <org.onlineservice.rand.login.ScalableFrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/bLight"
+        android:layout_below="@+id/radiator"
+        android:layout_alignParentStart="true"
+        android:visibility="gone"
+        android:layout_alignParentLeft="true" />
+
+    <org.onlineservice.rand.login.ScalableFrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/rpm"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:visibility="gone"
+        android:layout_alignParentLeft="true" />
+
+    <org.onlineservice.rand.login.ScalableFrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/battery"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:visibility="gone"
+        android:layout_alignParentLeft="true" />
+
+    <org.onlineservice.rand.login.ScalableFrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/frontFogLight"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:visibility="gone"
+        android:layout_alignParentLeft="true" />
+
+    <org.onlineservice.rand.login.ScalableFrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/frontLight"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:visibility="gone"
+        android:layout_alignParentLeft="true" />
+
+    <org.onlineservice.rand.login.ScalableFrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/malFunctionTime"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:visibility="gone"
+        android:layout_alignParentLeft="true" />
+
+    <org.onlineservice.rand.login.ScalableFrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/brake"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:visibility="gone"
+        android:layout_alignParentLeft="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="選擇"
+        android:id="@+id/chooseButton"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
+
+    <ListView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/listView"
+        android:visibility="gone"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/confirm"
+        android:visibility="gone"
+        android:text="@android:string/ok"
+        android:layout_alignParentBottom="true"
+        android:layout_alignStart="@+id/chooseButton"
+        android:layout_alignLeft="@+id/chooseButton" />
+</RelativeLayout>
