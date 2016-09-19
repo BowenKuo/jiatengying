@@ -83,10 +83,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/status_not_connect"
-            android:textSize="40sp"
+            android:textSize="30sp"
             android:id="@+id/carStatus"
             android:layout_gravity="center_horizontal"
-            android:textColor="@color/design_textinput_error_color_light" />
+            android:textColor="@color/design_textinput_error_color_light"
+            android:clickable="true" />
 
     </LinearLayout>
 
@@ -96,7 +97,7 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="@string/dtcHistoryTitle"
         android:id="@+id/textView4"
-        android:textSize="30sp"
+        android:textSize="20sp"
         android:layout_below="@+id/linearLayout2"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
@@ -119,16 +120,41 @@
         android:layout_below="@+id/clearHistory"
         android:layout_alignRight="@+id/clearHistory"
         android:layout_alignEnd="@+id/clearHistory"
-        android:layout_marginTop="24dp" >
+        android:layout_marginTop="24dp" ></android.support.v4.widget.SwipeRefreshLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/monitor"
+        android:id="@+id/toMonitor"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignRight="@+id/textView4"
+        android:layout_alignEnd="@+id/textView4"
+        android:clickable="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/record"
+        android:id="@+id/toRecord"
+        android:layout_toRightOf="@+id/toMonitor"
+        android:layout_alignTop="@+id/toMonitor"
+        android:layout_alignRight="@+id/clearHistory"
+        android:layout_alignEnd="@+id/clearHistory"
+        android:clickable="true" />
+
     <ListView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/troubleCodesHistory"
-        android:layout_alignTop="@+id/refreshLayout"
+        android:layout_below="@+id/clearHistory"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-    </android.support.v4.widget.SwipeRefreshLayout>
-
+        android:layout_alignParentStart="true"
+        android:layout_above="@+id/toMonitor" />
 
 
 </RelativeLayout>

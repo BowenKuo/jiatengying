@@ -49,4 +49,8 @@
     <string name="status_not_connect">藍芽未連接</string>
     <string name="status_healthy">健康</string>
     <string name="status_not_healthy">故障</string>
+    <string name="record">Record</string>
+    <string name="monitor">Monitor</string>
+    <string name="bluetoothNotAvailable">你的裝置不支援藍芽喔</string>
+    <string name="bluetoothNotEnabled">您的藍芽還沒開啟喔</string>
 </resources>
