@@ -57,7 +57,6 @@ public class LoginActivity extends Activity {
         session = new SessionManager(getApplicationContext());
 
         // Check if user is already logged in or not
-        session.setLogin(false);
         if (session.isLoggedIn()) {
             // User is already logged in. Take him to main activity
             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
@@ -69,27 +68,20 @@ public class LoginActivity extends Activity {
         btnLogin.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View view) {
-
                 String email = inputEmail.getText().toString().trim();
                 String password = inputPassword.getText().toString().trim();
-
+                Log.w("unencrypt password ", password);
                 // Check for empty data in the form
                 if (!email.isEmpty() && !password.isEmpty()) {
                     String encipherPassword = encrypt.getEncryptedPassword(password);
                     // login user
                     checkLogin(email, encipherPassword);
-                    //session.setLogin(true);
-
                 } else {
                     // Prompt user to enter credentials
                     Toast.makeText(getApplicationContext(),
                             "Please enter the credentials!", Toast.LENGTH_LONG)
                             .show();
                 }
-
-                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                startActivity(intent);
-                finish();
             }
 
         });
@@ -105,6 +97,7 @@ public class LoginActivity extends Activity {
             }
         });
 
+
     }
 
     /**
@@ -113,7 +106,8 @@ public class LoginActivity extends Activity {
     private void checkLogin(final String email, final String password) {
         // Tag used to cancel the request
         String tag_string_req = "req_login";
-
+        Log.w("account ", email);
+        Log.w("password ", password);
         pDialog.setMessage("Logging in ...");
         showDialog();
 
@@ -136,16 +130,19 @@ public class LoginActivity extends Activity {
                         session.setLogin(true);
 
                         // Now store the user in SQLite
-                        String uid = jObj.getString("uid");
-
+                        String uid = jObj.getString("mid");
                         JSONObject user = jObj.getJSONObject("user");
                         String name = user.getString("name");
+                        String type = user.getString("type");
                         String email = user.getString("email");
+                        String phone = user.getString("phone");
+                        String photo = user.getString("photo");
+                        String birthday = user.getString("birthday");
                         String created_at = user
                                 .getString("created_at");
 
                         // Inserting row in users table
-                        db.addUser(name, email, uid, created_at);
+                        db.addUser(name, email, uid, type, phone, photo, birthday, created_at);
 
                         // Launch main activity
                         Intent intent = new Intent(LoginActivity.this,
