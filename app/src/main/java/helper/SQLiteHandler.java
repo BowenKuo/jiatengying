@@ -13,7 +13,7 @@ public class SQLiteHandler extends SQLiteOpenHelper{
     private static final String TAG = SQLiteHandler.class.getSimpleName();
     /* All Static Value for Setting SQLite Database */
     //Database Version
-    private static final short DATABASE_VERSION = 2;
+    private static final short DATABASE_VERSION = 3;
     //Database Name
     private static final String DATABASE_NAME = "Session";
     //Login Table Name
@@ -23,11 +23,17 @@ public class SQLiteHandler extends SQLiteOpenHelper{
     private static final String KEY_NAME = "name";
     private static final String KEY_EMAIL = "email";
     private static final String KEY_UID = "uid";
-    private static final String KEY_TYPE="type";
-    private static final String KEY_PHONE="phone";
-    private static final String KEY_PHOTO="photo";
-    private static final String KEY_BIRTHDAY="birthday";
+    private static final String KEY_TYPE = "type";
+    private static final String KEY_PHONE = "phone";
+    private static final String KEY_PHOTO = "photo";
+    private static final String KEY_BIRTHDAY = "birthday";
     private static final String KEY_CREATED_AT = "created_at";
+    //mCar Table Name
+    private  static  final String TABLE_MCAR = "mcar";
+    //mCar Table Column names
+    private static final String CAR_BRAND = "brand";
+    private static final String CAR_TYPE = "type";
+    private static final String CAR_IMAGE_URL = "image_url";
 
     public SQLiteHandler(Context context){
         super(context,DATABASE_NAME,null,DATABASE_VERSION);
@@ -38,12 +44,23 @@ public class SQLiteHandler extends SQLiteOpenHelper{
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         //SQL syntax
         String CREATE_LOGIN_TABLE = "CREATE TABLE " + TABLE_USER + "("
-                + KEY_ID + " INTEGER PRIMARY KEY," + KEY_NAME + " TEXT,"
-                + KEY_EMAIL + " TEXT UNIQUE," + KEY_UID + " TEXT,"
-                + KEY_TYPE + " TEXT," + KEY_PHONE + " TEXT,"
-                + KEY_PHOTO + " BLOB," +KEY_BIRTHDAY + " TEXT,"
-                + KEY_CREATED_AT + " TEXT"  +  ")";
+                + KEY_ID + " INTEGER PRIMARY KEY,"
+                + KEY_NAME + " TEXT,"
+                + KEY_EMAIL + " TEXT UNIQUE,"
+                + KEY_UID + " TEXT,"
+                + KEY_TYPE + " TEXT,"
+                + KEY_PHONE + " TEXT,"
+                + KEY_PHOTO + " BLOB,"
+                + KEY_BIRTHDAY + " TEXT,"
+                + KEY_CREATED_AT + " TEXT" + ")";
         sqLiteDatabase.execSQL(CREATE_LOGIN_TABLE);
+
+        String CREATE_MCAR_TABLE = "CREATE TABLE " + TABLE_MCAR + "("
+                + KEY_ID + " INTEGER PRIMARY KEY,"
+                + CAR_BRAND + " TEXT,"
+                + CAR_TYPE + " TEXT,"
+                + CAR_IMAGE_URL + " TEXT)";
+        sqLiteDatabase.execSQL(CREATE_MCAR_TABLE);
 
         Log.d(TAG, "Database tables created");
     }
@@ -136,5 +153,46 @@ public class SQLiteHandler extends SQLiteOpenHelper{
         db.close();
 
         Log.d(TAG, "Update user photo in SQLite");
+    }
+
+    // -------------------- MCAR --------------------
+    //Store User details in the database
+    public void addMcar(String brand, String type, String image_url){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        //push into database
+        values.put(CAR_BRAND, brand);
+        values.put(CAR_TYPE, type);
+        values.put(CAR_IMAGE_URL, image_url);
+        //Insert Row
+        long id = db.insert(TABLE_MCAR, null, values);
+        db.close();
+
+        //Write into log
+        Log.d(TAG, "New car has been added");
+    }
+
+    public HashMap<String,String> getMcarDetail(){
+        HashMap<String,String> mcar = new HashMap<>();
+        String query = "SELECT * FROM " + TABLE_MCAR;
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        //Runs the provided SQL and returns a Cursor over the result set.
+        Cursor cursor = db.rawQuery(query,null);
+
+        //Move cursor to first row
+        cursor.moveToFirst();
+        if (cursor.getCount() > 0){
+            mcar.put("_id",cursor.getString(0));
+            mcar.put("brand",cursor.getString(1));
+            mcar.put("type",cursor.getString(2));
+            mcar.put("image_url",cursor.getString(3));
+        }
+        cursor.close();
+        db.close();
+        Log.d(TAG,"Fetching mcar from Sqlite: " + mcar.toString());
+
+        //return value
+        return mcar;
     }
 }

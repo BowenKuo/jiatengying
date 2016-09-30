@@ -18,6 +18,7 @@ public class SessionManager {
     //Shared preferences file name
     private static final String PREF_NAME = "AndroidHiveLogin";
     private static final String KEY_IS_LOGGEDIN = "isLoggedIn";
+    private static final String KEY_IS_HADCAR = "isHadCar";
 
 
     public SessionManager (Context context){
@@ -36,8 +37,22 @@ public class SessionManager {
         Log.d(TAG,"User log in session is modified");
     }
 
+    public void setCar (boolean isHadCar){
+        //putBoolean(String key, Boolean value)
+        editor.putBoolean(KEY_IS_HADCAR, isHadCar);
+        //commit change
+        editor.commit();
+        //Store action to log
+        Log.d(TAG,"Car log in session is modified");
+    }
+
     public boolean isLoggedIn(){
         //getBoolean(String key, boolean default_value)
         return pref.getBoolean(KEY_IS_LOGGEDIN,false);
+    }
+
+    public boolean isHadCar(){
+        //getBoolean(String key, boolean default_value)
+        return pref.getBoolean(KEY_IS_HADCAR,false);
     }
 }

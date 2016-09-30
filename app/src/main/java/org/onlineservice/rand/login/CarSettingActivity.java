@@ -2,6 +2,7 @@ package org.onlineservice.rand.login;
 
 
 import android.annotation.TargetApi;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
@@ -14,6 +15,7 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -34,21 +36,32 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import helper.SQLiteHandler;
+import helper.SessionManager;
+
 /**
  * Created by leoGod on 2016/8/21.
  */
 public class CarSettingActivity extends AppCompatActivity {
     String CAR_BRANDS_URL = "https://whatsupbooboo.me/booboo/connect_db-shit/get_car_brand.php";
     String CAR_TYPES_URL = "https://whatsupbooboo.me/booboo/connect_db-shit/get_car_type.php";
+    String ADD_MYCAR_URL = "https://whatsupbooboo.me/booboo/connect_db-shit/setMcar.php";
     RequestQueue mQueue;
     Context mContext;
+    ImageView car_image;
     Spinner car_brand_spinner;
     Spinner car_type_spinner;
     ArrayList<String> car_brand_lunch = new ArrayList<String>();
     ArrayList<String> car_type_lunch = new ArrayList<String>();
+    private String car_brand_selected = "";
+    private String car_type_selected = "";
+    private String car_image_url = "";
+    private SessionManager session;
     ArrayAdapter<String> car_brand_adapter;
     ArrayAdapter<String> car_type_adapter;
+    private ProgressDialog pDialog;
     private static final String TAG = CarSettingActivity.class.getName();
+    private SQLiteHandler db;
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public void onCreate(Bundle savedInstanceState) {
@@ -63,9 +76,19 @@ public class CarSettingActivity extends AppCompatActivity {
 //        actionBar.setTitle(Html.fromHtml("<font color='#FFFFFF'>Car Setting </font>"));
 //        actionBar.setDisplayHomeAsUpEnabled(true);
 
+        // SQLite database handler
+        db = new SQLiteHandler(getApplicationContext());
+        // Session manager
+        session = new SessionManager(getApplicationContext());
+
+        // Progress dialog
+        pDialog = new ProgressDialog(this);
+        pDialog.setCancelable(false);
+
         Button btndone = (Button) findViewById(R.id.btncarsetting);
         mQueue = Volley.newRequestQueue(this);
         mContext = this.getApplicationContext();
+        car_image = (ImageView) findViewById(R.id.car_image);
         car_brand_spinner = (Spinner) findViewById(R.id.brandspinner);
         car_type_spinner = (Spinner) findViewById(R.id.typesspinner);
         get_car_brands();
@@ -73,7 +96,11 @@ public class CarSettingActivity extends AppCompatActivity {
         btndone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                if(!car_brand_selected.isEmpty() && !car_type_selected.isEmpty()) {
+                    addInMycar(car_brand_selected, car_type_selected, car_image_url, db.getUserDetail().get("mid"));
+                } else {
+                    Toast.makeText(getApplicationContext(), "請選擇品牌與車種後再新增", Toast.LENGTH_LONG).show();
+                }
             }
         });
 
@@ -114,7 +141,8 @@ public class CarSettingActivity extends AppCompatActivity {
                     car_brand_spinner.setOnItemSelectedListener(new Spinner.OnItemSelectedListener() {
                         public void onItemSelected(AdapterView adapterView, View view, int position, long id) {
                             get_car_types(car_brand_lunch.get(position));
-                            Toast.makeText(mContext, "你選的是"+ car_brand_lunch.get(position), Toast.LENGTH_SHORT).show();
+//                            Toast.makeText(mContext, "你選的是"+ car_brand_lunch.get(position), Toast.LENGTH_SHORT).show();
+                            car_brand_selected = car_brand_lunch.get(position);
                         }
 
                         public void onNothingSelected(AdapterView arg0) {
@@ -172,8 +200,9 @@ public class CarSettingActivity extends AppCompatActivity {
                     car_type_spinner.setAdapter(car_type_adapter);
                     car_type_spinner.setOnItemSelectedListener(new Spinner.OnItemSelectedListener() {
                         public void onItemSelected(AdapterView adapterView, View view, int position, long id) {
-                            get_car_types(car_type_lunch.get(position));
-                            Toast.makeText(mContext, "你選的是"+ car_type_lunch.get(position), Toast.LENGTH_SHORT).show();
+//                            Toast.makeText(mContext, "你選的是"+ car_type_lunch.get(position), Toast.LENGTH_SHORT).show();
+                            car_type_selected = car_type_lunch.get(position);
+                            car_image_url = car_brand_selected + "-" + car_type_selected + ".png";
                         }
 
                         public void onNothingSelected(AdapterView arg0) {
@@ -214,6 +243,80 @@ public class CarSettingActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void addInMycar(final String car_brand, final String car_type, final String car_image_url, final String mid) {
+        String tag_string_req = "add car in mcar";
+        pDialog.setMessage("新增車子資訊中");
+        showDialog();
+
+        StringRequest strReq = new StringRequest(Request.Method.POST,
+                ADD_MYCAR_URL, new Response.Listener<String>() {
+
+            @Override
+            public void onResponse(String response) {
+                Log.d(TAG, "Login Response: " + response.toString());
+                hideDialog();
+
+                try {
+                    JSONObject jObj = new JSONObject(response);
+                    boolean error = jObj.getBoolean("error");
+
+                    // Check for error node in json
+                    if (!error) {
+                        // add in mcar (SQLite)
+                        session.setCar(true);
+                        db.addMcar(car_brand, car_type, car_image_url);
+                        Toast.makeText(getApplicationContext(), "汽車基本設定成功", Toast.LENGTH_LONG).show();
+                    } else {
+                        // Error in login. Get the error message
+                        String errorMsg = jObj.getString("error_msg");
+                        Toast.makeText(getApplicationContext(),
+                                errorMsg, Toast.LENGTH_LONG).show();
+                    }
+                } catch (JSONException e) {
+                    // JSON error
+                    e.printStackTrace();
+                    Toast.makeText(getApplicationContext(), "Json error: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                }
+
+            }
+        }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e(TAG, "Add in mcar Error: " + error.getMessage());
+                Toast.makeText(getApplicationContext(),
+                        error.getMessage(), Toast.LENGTH_LONG).show();
+                hideDialog();
+            }
+        }) {
+
+            @Override
+            protected Map<String, String> getParams() {
+                // Posting parameters to login url
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("car_brand", car_brand);
+                params.put("car_type", car_type);
+                params.put("mId", mid);
+
+                return params;
+            }
+
+        };
+
+        // Adding request to request queue
+        AppControl.getInstance().addToRequestQuene(strReq, tag_string_req);
+    }
+
+    private void showDialog() {
+        if (!pDialog.isShowing())
+            pDialog.show();
+    }
+
+    private void hideDialog() {
+        if (pDialog.isShowing())
+            pDialog.dismiss();
     }
 
 }
