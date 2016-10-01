@@ -4,6 +4,9 @@ package org.onlineservice.rand.login;
 import android.annotation.TargetApi;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -31,7 +34,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -46,6 +53,7 @@ public class CarSettingActivity extends AppCompatActivity {
     String CAR_BRANDS_URL = "https://whatsupbooboo.me/booboo/connect_db-shit/get_car_brand.php";
     String CAR_TYPES_URL = "https://whatsupbooboo.me/booboo/connect_db-shit/get_car_type.php";
     String ADD_MYCAR_URL = "https://whatsupbooboo.me/booboo/connect_db-shit/setMcar.php";
+    String BASIC_CAR_IMAGE_URL = "https://whatsupbooboo.me/booboo/img/car_image/";
     RequestQueue mQueue;
     Context mContext;
     ImageView car_image;
@@ -91,7 +99,11 @@ public class CarSettingActivity extends AppCompatActivity {
         car_image = (ImageView) findViewById(R.id.car_image);
         car_brand_spinner = (Spinner) findViewById(R.id.brandspinner);
         car_type_spinner = (Spinner) findViewById(R.id.typesspinner);
+
+        pDialog.setMessage("查詢廠牌中 ...");
+        showDialog();
         get_car_brands();
+        hideDialog();
 
         btndone.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -141,8 +153,11 @@ public class CarSettingActivity extends AppCompatActivity {
                     car_brand_spinner.setOnItemSelectedListener(new Spinner.OnItemSelectedListener() {
                         public void onItemSelected(AdapterView adapterView, View view, int position, long id) {
                             get_car_types(car_brand_lunch.get(position));
-//                            Toast.makeText(mContext, "你選的是"+ car_brand_lunch.get(position), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(mContext, "你選的是"+ car_brand_lunch.get(position), Toast.LENGTH_SHORT).show();
+                            pDialog.setMessage("查詢車型中 ...");
+                            showDialog();
                             car_brand_selected = car_brand_lunch.get(position);
+                            hideDialog();
                         }
 
                         public void onNothingSelected(AdapterView arg0) {
@@ -200,9 +215,29 @@ public class CarSettingActivity extends AppCompatActivity {
                     car_type_spinner.setAdapter(car_type_adapter);
                     car_type_spinner.setOnItemSelectedListener(new Spinner.OnItemSelectedListener() {
                         public void onItemSelected(AdapterView adapterView, View view, int position, long id) {
-//                            Toast.makeText(mContext, "你選的是"+ car_type_lunch.get(position), Toast.LENGTH_SHORT).show();
+                            pDialog.setMessage("獲取該車款圖片中 ...");
+                            showDialog();
                             car_type_selected = car_type_lunch.get(position);
                             car_image_url = car_brand_selected + "-" + car_type_selected + ".png";
+                            //建立一個AsyncTask執行緒進行圖片讀取動作，並帶入圖片連結網址路徑
+                            new AsyncTask<String, Void, Bitmap>()
+                            {
+                                @Override
+                                protected Bitmap doInBackground(String... params)
+                                {
+                                    String url = params[0];
+                                    return getBitmapFromURL(url);
+                                }
+
+                                @Override
+                                protected void onPostExecute(Bitmap result)
+                                {
+                                    car_image.setImageBitmap (result);
+                                    super.onPostExecute(result);
+                                }
+                            }.execute(BASIC_CAR_IMAGE_URL+car_image_url);
+                            hideDialog();
+                            Log.w("Image url", BASIC_CAR_IMAGE_URL+car_image_url);
                         }
 
                         public void onNothingSelected(AdapterView arg0) {
@@ -319,4 +354,26 @@ public class CarSettingActivity extends AppCompatActivity {
             pDialog.dismiss();
     }
 
+
+    //讀取網路圖片，型態為Bitmap
+    private static Bitmap getBitmapFromURL(String imageUrl)
+    {
+        try
+        {
+            URL url = new URL(imageUrl);
+            Log.w("Before", "get image");
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setDoInput(true);
+            connection.connect();
+            Log.w("Doing", "get image");
+            InputStream input = connection.getInputStream();
+            Bitmap bitmap = BitmapFactory.decodeStream(input);
+            return bitmap;
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+            return null;
+        }
+    }
 }

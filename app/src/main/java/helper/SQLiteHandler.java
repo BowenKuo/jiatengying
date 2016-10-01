@@ -74,7 +74,8 @@ public class SQLiteHandler extends SQLiteOpenHelper{
     }
 
     //Store User details in the database
-    public void addUser(String name, String email, String uid, String type, String phone, String photo, String birthday, String create_at){
+//    public void addUser(String name, String email, String uid, String type, String phone, String photo, String birthday, String create_at){
+    public void addUser(String name, String email, String uid, String type, String phone, String birthday, String create_at){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         //push into database
@@ -83,7 +84,7 @@ public class SQLiteHandler extends SQLiteOpenHelper{
         values.put(KEY_UID,uid);
         values.put(KEY_TYPE,type);
         values.put(KEY_PHONE,phone);
-        values.put(KEY_PHOTO,photo);
+//        values.put(KEY_PHOTO,photo);
         values.put(KEY_BIRTHDAY,birthday);
         values.put(KEY_CREATED_AT,create_at);
         //Insert Row

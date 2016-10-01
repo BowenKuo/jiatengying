@@ -179,6 +179,13 @@ public class Nevigation extends Fragment implements OnMapReadyCallback, GoogleAp
         return view;
     }
 
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        mGoogleApiClient.stopAutoManage(getActivity());
+        mGoogleApiClient.disconnect();
+    }
+
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         setUpMap();
