@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,15 +40,7 @@ public class CarInfo extends Fragment implements SwipeRefreshLayout.OnRefreshLis
 
         carPicture.setOnClickListener(setCarPictureListener());
         clearHistory.setOnClickListener(setClearHistoryListener());
-        toRecord.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.w("TEST BUTTON FINE", "^_^");
-                Toast.makeText(getContext(), "BUTTON OK", Toast.LENGTH_LONG).show();
-//                Intent intent = new Intent(view.getContext(), Record.class);
-//                getActivity().startActivity(intent);
-            }
-        });
+        toRecord.setOnClickListener(setToRecordListener());
 
         //Check Bluetooth Status
         if (adapter == null){
@@ -81,7 +72,8 @@ public class CarInfo extends Fragment implements SwipeRefreshLayout.OnRefreshLis
             @Override
             public void onClick(View view) {
                 //TODO  To Record Activity
-
+                Intent intent = new Intent(view.getContext(), Record.class);
+                getActivity().startActivity(intent);
             }
         };
     }
@@ -123,7 +115,8 @@ public class CarInfo extends Fragment implements SwipeRefreshLayout.OnRefreshLis
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.activity_carinfo, container, false);
         initialize(view);
-        return inflater.inflate(R.layout.activity_carinfo, container, false);
+//        return inflater.inflate(R.layout.activity_carinfo, container, false);
+        return view;
     }
 
     @Override
