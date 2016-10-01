@@ -7,9 +7,11 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -21,7 +23,8 @@ import helper.BluetoothSocketSerializable;
 public class CarInfo extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
     //Variables
     private ImageView clearHistory, carPicture;
-    private TextView carStatus, toMonitor, toRecord;
+    private TextView carStatus;
+    private Button toMonitor, toRecord;
     private ListView listView;
     private BluetoothSocket socket;
     private BluetoothSocketSerializable socketSerializable;
@@ -32,13 +35,21 @@ public class CarInfo extends Fragment implements SwipeRefreshLayout.OnRefreshLis
         carPicture = (ImageView) view.findViewById(R.id.carPicture);
         clearHistory = (ImageView) view.findViewById(R.id.clearHistory);
         carStatus = (TextView) view.findViewById(R.id.carStatus);
-        toMonitor = (TextView) view.findViewById(R.id.toMonitor);
-        toRecord = (TextView) view.findViewById(R.id.toRecord);
+        toMonitor = (Button) view.findViewById(R.id.toMonitor);
+        toRecord = (Button) view.findViewById(R.id.toRecord);
         listView = (ListView) view.findViewById(R.id.troubleCodesHistory);
-
 
         carPicture.setOnClickListener(setCarPictureListener());
         clearHistory.setOnClickListener(setClearHistoryListener());
+        toRecord.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.w("TEST BUTTON FINE", "^_^");
+                Toast.makeText(getContext(), "BUTTON OK", Toast.LENGTH_LONG).show();
+//                Intent intent = new Intent(view.getContext(), Record.class);
+//                getActivity().startActivity(intent);
+            }
+        });
 
         //Check Bluetooth Status
         if (adapter == null){
@@ -70,6 +81,7 @@ public class CarInfo extends Fragment implements SwipeRefreshLayout.OnRefreshLis
             @Override
             public void onClick(View view) {
                 //TODO  To Record Activity
+
             }
         };
     }

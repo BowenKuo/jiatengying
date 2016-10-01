@@ -3,8 +3,6 @@ package org.onlineservice.rand.login;
 import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -48,16 +46,10 @@ public class Setting extends Fragment {
     private ImageView profilePict;
     private Bitmap bitmap;
     private int PICK_IMAGE_REQUEST = 1;
-    private SQLiteDatabase db = null;
-    private SQLiteDatabase checkdb = null;
-    private Cursor c = null;
-    private Cursor cgg = null;
     private byte[] img = null;
     private SessionManager session;
     protected SQLiteHandler sdb;
     private String UPLOAD_URL ="https://whatsupbooboo.me/booboo/connect_db-shit/store_photo.php";
-    private String KEY_IMAGE = "photo";
-    private String KEY_EMAIL="email";
     private TextView userName;
     private TextView userEmail;
     private TextView userPhone;
@@ -100,9 +92,6 @@ public class Setting extends Fragment {
         if (uphoto != null) {
             bitmap = BitmapFactory.decodeByteArray(uphoto, 0, uphoto.length);
             profilePict.setImageBitmap(bitmap);
-        }
-        else {
-            Log.w("FUCK PHOTO", "YOU");
         }
 
 

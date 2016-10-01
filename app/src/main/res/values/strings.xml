@@ -55,4 +55,9 @@
     <string name="monitor">Monitor</string>
     <string name="bluetoothNotAvailable">你的裝置不支援藍芽喔</string>
     <string name="bluetoothNotEnabled">您的藍芽還沒開啟喔</string>
+
+    <!-- Record -->
+    <string name="maintain_time">保養日期</string>
+    <string name="maintain_history">保養內容記錄</string>
+    <string name="maintain_place">保養地點</string>
 </resources>
