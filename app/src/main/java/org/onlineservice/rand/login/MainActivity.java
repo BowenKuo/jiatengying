@@ -1,17 +1,20 @@
 package org.onlineservice.rand.login;
 
+import android.location.Location;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
+import com.google.android.gms.location.LocationListener;
+
 import java.util.HashMap;
 
 import helper.SQLiteHandler;
 import helper.SessionManager;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements LocationListener {
 
     private SQLiteHandler db;
     private SessionManager session;
@@ -62,6 +65,11 @@ public class MainActivity extends AppCompatActivity {
 
         // Fetching user details from sqlite
         HashMap<String, String> user = db.getUserDetail();
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+
     }
 
     /**

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" >
+
+    <android.support.v7.widget.CardView
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/maintain_history_card_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        card_view:cardCornerRadius="2dp"
+        android:layout_marginTop="1dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:elevation="1dp"
+            android:padding="10dp">
+
+            <TextView
+                android:id="@+id/maintain_history"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="@string/maintain_history"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="15sp"
+                android:gravity="center"
+                android:paddingStart="5dp"
+                android:paddingEnd="5dp" />
+
+            <TextView
+                android:id="@+id/maintain_time_label"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="@string/maintain_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="12sp"
+                android:paddingStart="5dp"
+                android:paddingEnd="5dp"
+                android:drawableStart="@drawable/ic_access_time_black_18dp"
+                android:drawablePadding="8dp"
+                android:gravity="center_vertical"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="7dp"/>
+
+            <TextView
+                android:id="@+id/maintain_place"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="@string/maintain_place"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="12sp"
+                android:paddingStart="5dp"
+                android:paddingEnd="5dp"
+                android:drawableStart="@drawable/ic_location_on_black_18dp"
+                android:drawablePadding="8dp"
+                android:gravity="center_vertical"/>
+
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
+
+</RelativeLayout>

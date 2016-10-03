@@ -12,7 +12,8 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:paddingLeft="20dp"
-        android:paddingRight="20dp" >
+        android:paddingRight="20dp"
+        android:weightSum="1">
 
         <EditText
             android:id="@+id/name"
@@ -33,12 +34,41 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
             android:background="@color/white"
-            android:hint="@string/hint_email"
+            android:hint="Email"
             android:inputType="textEmailAddress"
             android:padding="10dp"
             android:singleLine="true"
             android:textColor="@color/input_register"
             android:textColorHint="@color/input_register_hint" />
+
+        <EditText
+            android:id="@+id/phone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:background="@color/white"
+            android:hint="Phone"
+            android:padding="10dp"
+            android:singleLine="true"
+            android:textColor="@color/input_register"
+            android:textColorHint="@color/input_register_hint"
+            android:layout_gravity="center_horizontal"
+            android:textStyle="normal" />
+
+        <TextView
+            android:id="@+id/birthday"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:background="@color/white"
+            android:hint="Select your birthday"
+            android:padding="10dp"
+            android:singleLine="true"
+            android:textColor="@color/input_register"
+            android:textColorHint="@color/input_register_hint"
+            android:layout_gravity="center_horizontal"
+            android:clickable="true"
+            android:textSize="18dp"/>
 
         <EditText
             android:id="@+id/password"

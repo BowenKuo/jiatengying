@@ -1,5 +1,7 @@
 <resources>
-    <string name="app_name">Login</string>
+    <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">AIzaSyC9RZ2X9AU3r798fU7kkV-4u4i_ghh2yVE</string>
+
+    <string name="app_name">WuzupBooBoo</string>
     <string name="hint_email">Email</string>
     <string name="hint_password">Password</string>
     <string name="hint_confirm">Confirm</string>
@@ -53,4 +55,9 @@
     <string name="monitor">Monitor</string>
     <string name="bluetoothNotAvailable">你的裝置不支援藍芽喔</string>
     <string name="bluetoothNotEnabled">您的藍芽還沒開啟喔</string>
+
+    <!-- Record -->
+    <string name="maintain_time">保養日期</string>
+    <string name="maintain_history">保養內容記錄</string>
+    <string name="maintain_place">保養地點</string>
 </resources>

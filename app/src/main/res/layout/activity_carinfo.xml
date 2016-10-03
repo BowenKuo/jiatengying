@@ -122,7 +122,7 @@
         android:layout_alignEnd="@+id/clearHistory"
         android:layout_marginTop="24dp" ></android.support.v4.widget.SwipeRefreshLayout>
 
-    <TextView
+    <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
@@ -135,7 +135,7 @@
         android:layout_alignEnd="@+id/textView4"
         android:clickable="true" />
 
-    <TextView
+    <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
@@ -146,6 +146,7 @@
         android:layout_alignRight="@+id/clearHistory"
         android:layout_alignEnd="@+id/clearHistory"
         android:clickable="true" />
+
 
     <ListView
         android:layout_width="wrap_content"
