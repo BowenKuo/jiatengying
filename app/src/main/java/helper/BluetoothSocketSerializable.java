@@ -2,6 +2,7 @@ package helper;
 
 import android.bluetooth.BluetoothSocket;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import java.io.Serializable;
 
@@ -18,6 +19,7 @@ public class BluetoothSocketSerializable implements Serializable{
     }
 
     //Public Method
+    @Nullable
     public BluetoothSocket getSocket(){
         return socket;
     }

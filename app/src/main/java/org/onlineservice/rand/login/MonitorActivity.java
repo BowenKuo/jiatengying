@@ -39,6 +39,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
+import helper.BluetoothSocketSerializable;
+
 /**
  * Created by Rand on 2016/9/13. Outrageous~~
  */
@@ -53,10 +55,15 @@ public class MonitorActivity extends AppCompatActivity {
     private ScalableFrameLayout bLight, malFuncTime, fuelLevel;
     private Map<CharSequence, ScalableFrameLayout> frameLayoutMap;
     private String deviceAddress;
+    private BluetoothAdapter btAdapter = BluetoothAdapter.getDefaultAdapter();
+    private Bundle bundle = getIntent().getExtras();
 
 
     //Private Method
     private void initialize() {
+        if (bundle != null && bundle.get("bluetoothSocket") != null){
+            deviceAddress = ((String) bundle.get("bluetoothSocket"));
+        }
         list = (ListView) findViewById(R.id.listView);
         button = (Button) findViewById(R.id.chooseButton);
         confirm = (Button) findViewById(R.id.confirm);
@@ -108,7 +115,40 @@ public class MonitorActivity extends AppCompatActivity {
     }
 
     private void obd2Handler() {
-        ArrayList deviceStrs = new ArrayList();
+        BluetoothDevice device = btAdapter.getRemoteDevice(deviceAddress);
+
+
+        UUID uuid = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
+
+        BluetoothSocket socket = null;
+        try {
+            socket = device.createInsecureRfcommSocketToServiceRecord(uuid);
+        } catch (IOException e) {
+            e.printStackTrace();
+            Toast.makeText(getApplicationContext(),
+                    "BluetoothSocket exception", Toast.LENGTH_LONG)
+                    .show();
+        }
+
+        try {
+            assert socket != null;
+            socket.connect();
+        } catch (IOException e) {
+            e.printStackTrace();
+            Toast.makeText(getApplicationContext(), e.toString(), Toast.LENGTH_LONG)
+                    .show();
+        }
+
+        try {
+            handleOBD2(socket);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(getApplicationContext(), "handleOBD2 exception", Toast.LENGTH_LONG)
+                    .show();
+            Log.v("Exception", "e");
+        }
+
+/*        ArrayList deviceStrs = new ArrayList();
         final ArrayList devices = new ArrayList();
 
         final BluetoothAdapter btAdapter = BluetoothAdapter.getDefaultAdapter();
@@ -118,13 +158,13 @@ public class MonitorActivity extends AppCompatActivity {
                 deviceStrs.add(device.getName() + "\n" + device.getAddress());
                 devices.add(device.getAddress());
             }
-        }
+        }*/
 
         // show list
-        showAlertDialog(btAdapter, deviceStrs, devices);
+        //showAlertDialog(btAdapter, deviceStrs, devices);
     }
 
-    //TODO implement method to initialize FrameLayout
+    // initialize FrameLayout
     private void initFrameLayout(@NonNull final ScalableFrameLayout layout,
                                  @DrawableRes final int res,
                                  @NonNull final CharSequence text) {
@@ -189,7 +229,7 @@ public class MonitorActivity extends AppCompatActivity {
         }
     }
 
-    private void showAlertDialog(@NonNull final BluetoothAdapter btAdapter,
+ /*   private void showAlertDialog(@NonNull final BluetoothAdapter btAdapter,
                                  @NonNull ArrayList deviceStrs,
                                  @NonNull final ArrayList devices) {
         final AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
@@ -239,15 +279,14 @@ public class MonitorActivity extends AppCompatActivity {
             }
         });
 
-        alertDialog.setTitle("Choose Bluetooth Device");
+        alertDialog.setTitle("選擇OBD2裝置");
         alertDialog.show();
-    }
+    }*/
 
     private void handleOBD2(final BluetoothSocket socket) throws IOException, InterruptedException {
-        new EchoOffCommand().run(socket.getInputStream(), socket.getOutputStream());
-        new LineFeedOffCommand().run(socket.getInputStream(), socket.getOutputStream());
-        new SelectProtocolCommand(ObdProtocols.ISO_15765_4_CAN).run(socket.getInputStream(),
-                socket.getOutputStream());
+        executeCommand(new EchoOffCommand(),socket);
+        executeCommand(new LineFeedOffCommand(),socket);
+        executeCommand(new SelectProtocolCommand(ObdProtocols.ISO_15765_4_CAN),socket);
 
         //Initialize commands
         final RPMCommand engineRPMCmd = new RPMCommand();
@@ -516,6 +555,6 @@ public class MonitorActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initialize();
-        //obd2Handler();
+        obd2Handler();
     }
 }
