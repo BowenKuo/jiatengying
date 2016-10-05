@@ -4,6 +4,8 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.OperationApplicationException;
 import android.os.Bundle;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
@@ -56,11 +58,18 @@ public class MonitorActivity extends AppCompatActivity {
     private Map<CharSequence, ScalableFrameLayout> frameLayoutMap;
     private String deviceAddress;
     private BluetoothAdapter btAdapter = BluetoothAdapter.getDefaultAdapter();
-    private Bundle bundle = getIntent().getExtras();
+    private Bundle bundle;
 
 
     //Private Method
     private void initialize() {
+        Intent intent = getIntent();
+        if(intent == null){
+            Log.e("Shoot","Ya die");
+        }else {
+            Log.e("Yas","I lived");
+            bundle = intent.getExtras();
+        }
         if (bundle != null && bundle.get("bluetoothSocket") != null){
             deviceAddress = ((String) bundle.get("bluetoothSocket"));
         }
@@ -553,7 +562,7 @@ public class MonitorActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_monitor);
         initialize();
         obd2Handler();
     }
