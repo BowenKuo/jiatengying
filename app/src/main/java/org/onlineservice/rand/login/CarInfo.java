@@ -22,6 +22,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.pires.obd.commands.protocol.EchoOffCommand;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Set;
@@ -110,9 +112,15 @@ public class CarInfo extends Fragment implements SwipeRefreshLayout.OnRefreshLis
                     Toast.makeText(getActivity().getApplicationContext(),"藍芽未連接!!"
                             ,Toast.LENGTH_LONG).show();
                 }else{
+                    try {
+                        socket.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                     Intent intent = new Intent(getContext(),MonitorActivity.class);
 //                    socketSerializable = new BluetoothSocketSerializable(socket);
-                    intent.putExtra("bluetoothSocket",address);
+                    intent.putExtra("bluetoothSocket",address.toString());
+                    Log.e("test",(String) intent.getExtras().get("bluetoothSocket"));
                     getActivity().startActivity(intent);
                 }
             }
@@ -181,7 +189,7 @@ public class CarInfo extends Fragment implements SwipeRefreshLayout.OnRefreshLis
         ArrayAdapter adapter = new ArrayAdapter(this.getActivity(), android.R.layout.select_dialog_singlechoice,
                 deviceStrs.toArray(new String[deviceStrs.size()]));
 
-        alertDialog.setSingleChoiceItems(adapter, 1, new DialogInterface.OnClickListener() {
+        alertDialog.setSingleChoiceItems(adapter,0, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 dialogInterface.dismiss();
@@ -192,9 +200,11 @@ public class CarInfo extends Fragment implements SwipeRefreshLayout.OnRefreshLis
 
                 UUID uuid = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
 
-                BluetoothSocket socket = null;
+                socket = null;
                 try {
                     socket = device.createInsecureRfcommSocketToServiceRecord(uuid);
+                    Toast.makeText(getActivity().getApplicationContext(),"well done.",Toast.LENGTH_LONG)
+                            .show();
                 } catch (IOException e) {
                     e.printStackTrace();
                     Toast.makeText(getActivity().getApplicationContext(),
@@ -207,10 +217,17 @@ public class CarInfo extends Fragment implements SwipeRefreshLayout.OnRefreshLis
                     socket.connect();
                 } catch (IOException e) {
                     e.printStackTrace();
-                    Toast.makeText(getActivity().getApplicationContext(), e.toString(), Toast.LENGTH_LONG)
+                    Toast.makeText(getActivity().getApplicationContext(), e.toString() + deviceAddress, Toast.LENGTH_LONG)
                             .show();
                 }
                 address = deviceAddress;
+                try {
+                    new EchoOffCommand().run(socket.getInputStream(),socket.getOutputStream());
+                } catch (IOException | InterruptedException e) {
+                    e.printStackTrace();
+                    Toast.makeText(getActivity().getApplicationContext(), e.toString() + deviceAddress, Toast.LENGTH_LONG)
+                            .show();
+                }
             }
         });
 
@@ -223,12 +240,12 @@ public class CarInfo extends Fragment implements SwipeRefreshLayout.OnRefreshLis
 
     //Refresh UI
     private void loadUI(){
-        //TODO  Get Obd2 trouble codes
+        //TODO  Get Obd2 trouble codes  ;  Load data from SQLite
     }
 
     //Clear Trouble codes
     private void clearTroubleCode(){
-        //TODO Clear all trouble code history
+        //TODO Clear all trouble code history ;  Clear data from SQLite
     }
 
     //Public methods
