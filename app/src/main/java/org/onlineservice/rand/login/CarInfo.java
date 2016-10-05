@@ -5,20 +5,18 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import android.widget.ArrayAdapter;
-
 import android.widget.Button;
-
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -29,7 +27,8 @@ import java.util.ArrayList;
 import java.util.Set;
 import java.util.UUID;
 
-import helper.BluetoothSocketSerializable;
+import helper.SQLiteHandler;
+import helper.SessionManager;
 
 /**
   * Created by Rand on 2016/9/13.  double  e = 2.718281828
@@ -42,9 +41,12 @@ public class CarInfo extends Fragment implements SwipeRefreshLayout.OnRefreshLis
     private Button toMonitor, toRecord;
     private ListView listView;
     private BluetoothSocket socket;
+    private Bitmap carBitmap;
     //private BluetoothSocketSerializable socketSerializable;
     private String address = null;
     private String deviceAddress;
+    private SQLiteHandler sdb;
+    private SessionManager session;
     private BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
 
     //Private methods
@@ -63,7 +65,29 @@ public class CarInfo extends Fragment implements SwipeRefreshLayout.OnRefreshLis
         toMonitor.setOnClickListener(setToMonitorListener());
         toRecord.setOnClickListener(setToRecordListener());
 
-        //Check Bluetooth Status
+        sdb = new SQLiteHandler(getActivity().getApplicationContext());
+        session = new SessionManager(getActivity().getApplicationContext());
+        // Check user have car in data
+        if (session.isHadCar() == false) {
+            // We have no data about user's car, so user need to set one
+            Toast.makeText(getContext(), "請先做汽車基本設定",
+                    Toast.LENGTH_LONG).show();
+            Intent intent = new Intent(getActivity(), CarSettingActivity.class);
+            startActivity(intent);
+        } else {
+            byte[] carPhoto = sdb.getMcarPhoto();
+            if (carPhoto != null) {
+//                ByteArrayOutputStream baos = new ByteArrayOutputStream();;
+//                carBitmap = BitmapFactory.decodeByteArray(carPhoto, 0, carPhoto.length);
+//                carBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+//                byte[] baosArr = baos.toByteArray();
+//                carPicture.setImageBitmap(BitmapFactory.decodeByteArray(baosArr, 0, baosArr.length));
+                carBitmap = BitmapFactory.decodeByteArray(carPhoto, 0, carPhoto.length);
+                carPicture.setImageBitmap(carBitmap);
+            }
+        }
+
+        // Check Bluetooth Status
         if (adapter == null){
             Toast.makeText(getContext(),R.string.bluetoothNotAvailable,Toast.LENGTH_LONG).show();
         }else{

@@ -3,9 +3,12 @@ package org.onlineservice.rand.login;
 
 import android.annotation.TargetApi;
 import android.app.ProgressDialog;
+import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -13,8 +16,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -29,6 +30,10 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.appindexing.Thing;
+import com.google.android.gms.common.api.GoogleApiClient;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -50,10 +55,12 @@ import helper.SessionManager;
  * Created by leoGod on 2016/8/21.
  */
 public class CarSettingActivity extends AppCompatActivity {
+    private static Bitmap car_selected_image;
     String CAR_BRANDS_URL = "https://whatsupbooboo.me/booboo/connect_db-shit/get_car_brand.php";
     String CAR_TYPES_URL = "https://whatsupbooboo.me/booboo/connect_db-shit/get_car_type.php";
     String ADD_MYCAR_URL = "https://whatsupbooboo.me/booboo/connect_db-shit/setMcar.php";
     String BASIC_CAR_IMAGE_URL = "https://whatsupbooboo.me/booboo/img/car_image/";
+    private byte[] img = null;
     RequestQueue mQueue;
     Context mContext;
     ImageView car_image;
@@ -70,15 +77,21 @@ public class CarSettingActivity extends AppCompatActivity {
     private ProgressDialog pDialog;
     private static final String TAG = CarSettingActivity.class.getName();
     private SQLiteHandler db;
+    private HashMap<String, String> mcarmap = new HashMap<String, String>();
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    private GoogleApiClient client;
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_carsetting);
 
-        Window window = getWindow();
-        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-        window.setStatusBarColor(getResources().getColor(R.color.bg_login));
+//        Window window = getWindow();
+//        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+//        window.setStatusBarColor(getResources().getColor(R.color.bg_login));
 //        ActionBar actionBar = getSupportActionBar();
 //        actionBar.setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.bg_login)));
 //        actionBar.setTitle(Html.fromHtml("<font color='#FFFFFF'>Car Setting </font>"));
@@ -108,17 +121,23 @@ public class CarSettingActivity extends AppCompatActivity {
         btndone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!car_brand_selected.isEmpty() && !car_type_selected.isEmpty()) {
+                if (!car_brand_selected.isEmpty() && !car_type_selected.isEmpty()) {
+                    Log.w("User detail", db.getUserDetail().toString());
                     addInMycar(car_brand_selected, car_type_selected, car_image_url, db.getUserDetail().get("mid"));
+                    Intent intent = new Intent(v.getContext(), MainActivity.class);
+                    startActivity(intent);
                 } else {
                     Toast.makeText(getApplicationContext(), "請選擇品牌與車種後再新增", Toast.LENGTH_LONG).show();
                 }
             }
         });
 
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
-    public void get_car_brands(){
+    public void get_car_brands() {
         // before user choose car brand, we need to disable the spinner of car type
         car_type_spinner.setEnabled(false);
 
@@ -153,7 +172,7 @@ public class CarSettingActivity extends AppCompatActivity {
                     car_brand_spinner.setOnItemSelectedListener(new Spinner.OnItemSelectedListener() {
                         public void onItemSelected(AdapterView adapterView, View view, int position, long id) {
                             get_car_types(car_brand_lunch.get(position));
-                            Toast.makeText(mContext, "你選的是"+ car_brand_lunch.get(position), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(mContext, "你選的是" + car_brand_lunch.get(position), Toast.LENGTH_SHORT).show();
                             pDialog.setMessage("查詢車型中 ...");
                             showDialog();
                             car_brand_selected = car_brand_lunch.get(position);
@@ -181,7 +200,7 @@ public class CarSettingActivity extends AppCompatActivity {
         mQueue.add(strReq);
     }
 
-    public void get_car_types(final String car_brand){
+    public void get_car_types(final String car_brand) {
         // after user choose car brand, we enable the spinner of car type
         car_type_spinner.setEnabled(true);
 
@@ -220,24 +239,21 @@ public class CarSettingActivity extends AppCompatActivity {
                             car_type_selected = car_type_lunch.get(position);
                             car_image_url = car_brand_selected + "-" + car_type_selected + ".png";
                             //建立一個AsyncTask執行緒進行圖片讀取動作，並帶入圖片連結網址路徑
-                            new AsyncTask<String, Void, Bitmap>()
-                            {
+                            new AsyncTask<String, Void, Bitmap>() {
                                 @Override
-                                protected Bitmap doInBackground(String... params)
-                                {
+                                protected Bitmap doInBackground(String... params) {
                                     String url = params[0];
                                     return getBitmapFromURL(url);
                                 }
 
                                 @Override
-                                protected void onPostExecute(Bitmap result)
-                                {
-                                    car_image.setImageBitmap (result);
+                                protected void onPostExecute(Bitmap result) {
+                                    car_image.setImageBitmap(result);
                                     super.onPostExecute(result);
                                 }
-                            }.execute(BASIC_CAR_IMAGE_URL+car_image_url);
+                            }.execute(BASIC_CAR_IMAGE_URL + car_image_url);
                             hideDialog();
-                            Log.w("Image url", BASIC_CAR_IMAGE_URL+car_image_url);
+                            Log.w("Image url", BASIC_CAR_IMAGE_URL + car_image_url);
                         }
 
                         public void onNothingSelected(AdapterView arg0) {
@@ -302,6 +318,13 @@ public class CarSettingActivity extends AppCompatActivity {
                         // add in mcar (SQLite)
                         session.setCar(true);
                         db.addMcar(car_brand, car_type, car_image_url);
+                        mcarmap = db.getMcarDetail();
+                        Log.w("mcarmap", mcarmap.toString());
+                        img = Setting.getbyteImage(car_selected_image);
+                        ContentValues cv = new ContentValues();
+                        cv.put("image", img);
+                        String id = mcarmap.get("_id");
+                        db.updateMcarPhoto(cv, id);
                         Toast.makeText(getApplicationContext(), "汽車基本設定成功", Toast.LENGTH_LONG).show();
                     } else {
                         // Error in login. Get the error message
@@ -334,6 +357,7 @@ public class CarSettingActivity extends AppCompatActivity {
                 params.put("car_brand", car_brand);
                 params.put("car_type", car_type);
                 params.put("mId", mid);
+                Log.w("Params value", params.toString());
 
                 return params;
             }
@@ -356,10 +380,9 @@ public class CarSettingActivity extends AppCompatActivity {
 
 
     //讀取網路圖片，型態為Bitmap
-    private static Bitmap getBitmapFromURL(String imageUrl)
-    {
-        try
-        {
+    private static Bitmap getBitmapFromURL(String imageUrl) {
+        try {
+            imageUrl = imageUrl.replace(" ", "%20");
             URL url = new URL(imageUrl);
             Log.w("Before", "get image");
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -368,12 +391,47 @@ public class CarSettingActivity extends AppCompatActivity {
             Log.w("Doing", "get image");
             InputStream input = connection.getInputStream();
             Bitmap bitmap = BitmapFactory.decodeStream(input);
+            car_selected_image = bitmap;
             return bitmap;
-        }
-        catch (IOException e)
-        {
+        } catch (IOException e) {
             e.printStackTrace();
             return null;
         }
+    }
+
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    public Action getIndexApiAction() {
+        Thing object = new Thing.Builder()
+                .setName("CarSetting Page") // TODO: Define a title for the content shown.
+                // TODO: Make sure this auto-generated URL is correct.
+                .setUrl(Uri.parse("http://[ENTER-YOUR-URL-HERE]"))
+                .build();
+        return new Action.Builder(Action.TYPE_VIEW)
+                .setObject(object)
+                .setActionStatus(Action.STATUS_TYPE_COMPLETED)
+                .build();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client.connect();
+        AppIndex.AppIndexApi.start(client, getIndexApiAction());
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        AppIndex.AppIndexApi.end(client, getIndexApiAction());
+        client.disconnect();
     }
 }

@@ -72,9 +72,6 @@ public class Setting extends Fragment {
         // set profile picture to default first
         profilePict.setImageResource(R.mipmap.nopic);
 
-
-//        mdb=new MyDatabase(getActivity().getApplicationContext());
-//        db=mdb.getWritableDatabase();
         // SQLite database handler
         sdb = new SQLiteHandler(getActivity().getApplicationContext());
         usermap = sdb.getUserDetail();
@@ -83,7 +80,7 @@ public class Setting extends Fragment {
         String uname =usermap.get("name");
         String uemail = usermap.get("email");
         String uphone = usermap.get("phone");
-        byte[] uphoto = sdb.getPhoto();
+        byte[] uphoto = sdb.getUserPhoto();
 
         userName.setText(uname);
         userEmail.setText(uemail);
@@ -132,8 +129,9 @@ public class Setting extends Fragment {
      * */
     private void logoutUser() {
         session.setLogin(false);
-
+        session.setCar(false);
         sdb.deleteUsers();
+        sdb.deleteMcar();
 
         // Launching the login activity
         Intent intent = new Intent(getActivity(), LoginActivity.class);
@@ -141,7 +139,7 @@ public class Setting extends Fragment {
         getActivity().finish();
     }
 
-    public byte[] getbyteImage(Bitmap bmp){
+    public static byte[] getbyteImage(Bitmap bmp){
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bmp.compress(Bitmap.CompressFormat.JPEG, 100, baos);
         byte[] imageBytes = baos.toByteArray();
