@@ -59,7 +59,7 @@ public class CarSettingActivity extends AppCompatActivity {
     String CAR_BRANDS_URL = "https://whatsupbooboo.me/booboo/connect_db-shit/get_car_brand.php";
     String CAR_TYPES_URL = "https://whatsupbooboo.me/booboo/connect_db-shit/get_car_type.php";
     String ADD_MYCAR_URL = "https://whatsupbooboo.me/booboo/connect_db-shit/setMcar.php";
-    String BASIC_CAR_IMAGE_URL = "https://whatsupbooboo.me/booboo/img/car_image/";
+    String BASIC_CAR_IMAGE_URL = "https://whatsupbooboo.me/booboo/img/car_image_jpg/";
     private byte[] img = null;
     RequestQueue mQueue;
     Context mContext;
@@ -237,7 +237,7 @@ public class CarSettingActivity extends AppCompatActivity {
                             pDialog.setMessage("獲取該車款圖片中 ...");
                             showDialog();
                             car_type_selected = car_type_lunch.get(position);
-                            car_image_url = car_brand_selected + "-" + car_type_selected + ".png";
+                            car_image_url = car_brand_selected + "-" + car_type_selected + ".jpg";
                             //建立一個AsyncTask執行緒進行圖片讀取動作，並帶入圖片連結網址路徑
                             new AsyncTask<String, Void, Bitmap>() {
                                 @Override
