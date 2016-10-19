@@ -137,6 +137,7 @@ public class CarSettingActivity extends AppCompatActivity {
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
+
     public void get_car_brands() {
         // before user choose car brand, we need to disable the spinner of car type
         car_type_spinner.setEnabled(false);

@@ -78,7 +78,7 @@
             android:layout_gravity="center_horizontal"
             android:src="@drawable/car"
             android:clickable="true"
-            android:background="#FFFFFFFF" />
+            android:background="@android:color/transparent" />
 
         <TextView
             android:layout_width="wrap_content"

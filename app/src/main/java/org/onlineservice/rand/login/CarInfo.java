@@ -69,25 +69,8 @@ public class CarInfo extends Fragment implements SwipeRefreshLayout.OnRefreshLis
 
         sdb = new SQLiteHandler(getActivity().getApplicationContext());
         session = new SessionManager(getActivity().getApplicationContext());
-        // Check user have car in data
-        if (session.isHadCar() == false) {
-            // We have no data about user's car, so user need to set one
-            Toast.makeText(getContext(), "請先做汽車基本設定",
-                    Toast.LENGTH_LONG).show();
-            Intent intent = new Intent(getActivity(), CarSettingActivity.class);
-            startActivity(intent);
-        } else {
-            byte[] carPhoto = sdb.getMcarPhoto();
-            if (carPhoto != null) {
-//                ByteArrayOutputStream baos = new ByteArrayOutputStream();;
-//                carBitmap = BitmapFactory.decodeByteArray(carPhoto, 0, carPhoto.length);
-//                carBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-//                byte[] baosArr = baos.toByteArray();
-//                carPicture.setImageBitmap(BitmapFactory.decodeByteArray(baosArr, 0, baosArr.length));
-                carBitmap = BitmapFactory.decodeByteArray(carPhoto, 0, carPhoto.length);
-                carPicture.setImageBitmap(carBitmap);
-            }
-        }
+
+        setCarImage();
 
         // Check Bluetooth Status
         if (adapter == null){
@@ -102,6 +85,22 @@ public class CarInfo extends Fragment implements SwipeRefreshLayout.OnRefreshLis
         }
     }
 
+    public void setCarImage() {
+        // Check user have car in data
+        if (session.isHadCar() == false) {
+            // We have no data about user's car, so user need to set one
+            Toast.makeText(getContext(), "請先做汽車基本設定",
+                    Toast.LENGTH_LONG).show();
+            Intent intent = new Intent(getActivity(), CarSettingActivity.class);
+            startActivity(intent);
+        } else {
+            byte[] carPhoto = sdb.getMcarPhoto();
+            if (carPhoto != null) {
+                carBitmap = BitmapFactory.decodeByteArray(carPhoto, 0, carPhoto.length);
+                carPicture.setImageBitmap(carBitmap);
+            }
+        }
+    }
     //ToMonitorOnClickListener
     private View.OnClickListener setToMonitorListener(){
         return new View.OnClickListener() {
@@ -258,6 +257,7 @@ public class CarInfo extends Fragment implements SwipeRefreshLayout.OnRefreshLis
 //        return inflater.inflate(R.layout.activity_carinfo, container, false);
         return view;
     }
+
 
     @Override
     public void onRefresh() {
