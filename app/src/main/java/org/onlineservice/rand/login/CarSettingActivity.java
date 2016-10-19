@@ -124,6 +124,12 @@ public class CarSettingActivity extends AppCompatActivity {
                 if (!car_brand_selected.isEmpty() && !car_type_selected.isEmpty()) {
                     Log.w("User detail", db.getUserDetail().toString());
                     addInMycar(car_brand_selected, car_type_selected, car_image_url, db.getUserDetail().get("mid"));
+                    try {
+                        Thread.sleep(500);
+                    } catch (InterruptedException e) {
+                        Log.d("error", String.valueOf(e));
+                    }
+                    Toast.makeText(getApplicationContext(), "汽車基本設定成功", Toast.LENGTH_LONG).show();
                     Intent intent = new Intent(v.getContext(), MainActivity.class);
                     startActivity(intent);
                 } else {
@@ -318,15 +324,19 @@ public class CarSettingActivity extends AppCompatActivity {
                     if (!error) {
                         // add in mcar (SQLite)
                         session.setCar(true);
-                        db.addMcar(car_brand, car_type, car_image_url);
+                        if(db.getMcarDetail() == null) {
+                            db.addMcar(car_brand, car_type, car_image_url);
+                        }
                         mcarmap = db.getMcarDetail();
                         Log.w("mcarmap", mcarmap.toString());
                         img = Setting.getbyteImage(car_selected_image);
                         ContentValues cv = new ContentValues();
-                        cv.put("image", img);
+                        cv.put(SQLiteHandler.CAR_IMAGE_BLOB, img);
+                        cv.put(SQLiteHandler.CAR_BRAND, car_brand);
+                        cv.put(SQLiteHandler.CAR_TYPE, car_type);
+                        cv.put(SQLiteHandler.CAR_IMAGE_URL, car_image_url);
                         String id = mcarmap.get("_id");
-                        db.updateMcarPhoto(cv, id);
-                        Toast.makeText(getApplicationContext(), "汽車基本設定成功", Toast.LENGTH_LONG).show();
+                        db.updateMcar(cv, id);
                     } else {
                         // Error in login. Get the error message
                         String errorMsg = jObj.getString("error_msg");

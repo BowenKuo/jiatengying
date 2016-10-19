@@ -19,6 +19,8 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
 
     private SQLiteHandler db;
     private SessionManager session;
+    private ViewPager viewPager;
+    private PagerAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,8 +38,8 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         tabLayout.addTab(tabLayout.newTab().setText("Setting"));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
-        final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
-        final PagerAdapter adapter = new PagerAdapter
+        viewPager = (ViewPager) findViewById(R.id.pager);
+        adapter = new PagerAdapter
                 (getSupportFragmentManager(), tabLayout.getTabCount());
         viewPager.setAdapter(adapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
@@ -76,6 +78,13 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
     @Override
     public void onResume() {
         super.onResume();
+        int item_n = viewPager.getCurrentItem();
+//        viewPager.getAdapter()
+        Log.w("fuck", String.valueOf(item_n));
+        if (item_n == 0) {
+            adapter.notifyDataSetChanged();
+            Log.w("fuck", "you !!!");
+        }
         Log.w("fuck", "you");
     }
     /**

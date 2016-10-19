@@ -12,11 +12,12 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -40,7 +41,7 @@ public class CarInfo extends Fragment implements SwipeRefreshLayout.OnRefreshLis
     //Variables
     private ImageView clearHistory, carPicture;
     private TextView carStatus;
-    private Button toMonitor, toRecord;
+    private ImageButton toMonitor, toRecord;
     private ListView listView;
     private BluetoothSocket socket;
     private Bitmap carBitmap;
@@ -56,8 +57,8 @@ public class CarInfo extends Fragment implements SwipeRefreshLayout.OnRefreshLis
         carPicture = (ImageView) view.findViewById(R.id.carPicture);
         clearHistory = (ImageView) view.findViewById(R.id.clearHistory);
         carStatus = (TextView) view.findViewById(R.id.carStatus);
-        toMonitor = (Button) view.findViewById(R.id.toMonitor);
-        toRecord = (Button) view.findViewById(R.id.toRecord);
+        toMonitor = (ImageButton) view.findViewById(R.id.toMonitor);
+        toRecord = (ImageButton) view.findViewById(R.id.toRecord);
         listView = (ListView) view.findViewById(R.id.troubleCodesHistory);
 
         carPicture.setOnClickListener(setCarPictureListener());
@@ -94,6 +95,7 @@ public class CarInfo extends Fragment implements SwipeRefreshLayout.OnRefreshLis
             Intent intent = new Intent(getActivity(), CarSettingActivity.class);
             startActivity(intent);
         } else {
+            Log.w("fuck car info car details", sdb.getMcarDetail().toString());
             byte[] carPhoto = sdb.getMcarPhoto();
             if (carPhoto != null) {
                 carBitmap = BitmapFactory.decodeByteArray(carPhoto, 0, carPhoto.length);
@@ -101,6 +103,7 @@ public class CarInfo extends Fragment implements SwipeRefreshLayout.OnRefreshLis
             }
         }
     }
+
     //ToMonitorOnClickListener
     private View.OnClickListener setToMonitorListener(){
         return new View.OnClickListener() {
@@ -253,6 +256,7 @@ public class CarInfo extends Fragment implements SwipeRefreshLayout.OnRefreshLis
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.activity_carinfo, container, false);
+        Log.w("fuck", "car info on createView");
         initialize(view);
 //        return inflater.inflate(R.layout.activity_carinfo, container, false);
         return view;
@@ -262,5 +266,6 @@ public class CarInfo extends Fragment implements SwipeRefreshLayout.OnRefreshLis
     @Override
     public void onRefresh() {
         loadUI();
+        Log.w("shit", "fuck you");
     }
 }
