@@ -137,6 +137,17 @@ public class SQLiteHandler extends SQLiteOpenHelper{
         return photo;
     }
 
+    public String getMid(){
+        String query = "SELECT * FROM " + TABLE_USER;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(query, null);
+        String mid = null;
+        if (cursor.moveToFirst())
+            mid = cursor.getString(cursor.getColumnIndex("mid"));
+        db.close();
+        return mid;
+    }
+
     //Re crate database Delete all tables and create them again
     public void deleteUsers() {
         SQLiteDatabase db = this.getWritableDatabase();
