@@ -308,6 +308,7 @@ public class MonitorActivity extends AppCompatActivity {
                 new EngineCoolantTemperatureCommand();
 
         //Thread Running
+        //RPM
         Thread rpmThread = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -336,6 +337,7 @@ public class MonitorActivity extends AppCompatActivity {
             }
         });
 
+        //Speed
         Thread speedThread = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -366,6 +368,7 @@ public class MonitorActivity extends AppCompatActivity {
 
         });
 
+        //Fuel Level
         Thread fuelThread = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -395,6 +398,7 @@ public class MonitorActivity extends AppCompatActivity {
             }
         });
 
+        //電壓
         Thread voltageThread = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -424,6 +428,7 @@ public class MonitorActivity extends AppCompatActivity {
             }
         });
 
+        //故障碼數
         Thread dtcNumberThread = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -453,6 +458,7 @@ public class MonitorActivity extends AppCompatActivity {
             }
         });
 
+        // Get TroubleCode
         Thread troubleCodeThread = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -484,6 +490,8 @@ public class MonitorActivity extends AppCompatActivity {
                 }
             }
         });
+
+        //油壓
         Thread fuelPressureThread = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -513,6 +521,7 @@ public class MonitorActivity extends AppCompatActivity {
             }
         });
 
+        //引擎冷卻液
         Thread engineCoolantThread = new Thread(new Runnable() {
             @Override
             public void run() {

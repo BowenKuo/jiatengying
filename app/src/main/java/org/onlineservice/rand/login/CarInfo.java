@@ -12,6 +12,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +25,7 @@ import android.widget.Toast;
 
 import com.github.pires.obd.commands.protocol.EchoOffCommand;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Set;
@@ -70,7 +72,7 @@ public class CarInfo extends Fragment implements SwipeRefreshLayout.OnRefreshLis
         sdb = new SQLiteHandler(getActivity().getApplicationContext());
         session = new SessionManager(getActivity().getApplicationContext());
         // Check user have car in data
-        if (session.isHadCar() == false) {
+        if (!session.isHadCar()) {
             // We have no data about user's car, so user need to set one
             Toast.makeText(getContext(), "請先做汽車基本設定",
                     Toast.LENGTH_LONG).show();
@@ -79,13 +81,13 @@ public class CarInfo extends Fragment implements SwipeRefreshLayout.OnRefreshLis
         } else {
             byte[] carPhoto = sdb.getMcarPhoto();
             if (carPhoto != null) {
-//                ByteArrayOutputStream baos = new ByteArrayOutputStream();;
-//                carBitmap = BitmapFactory.decodeByteArray(carPhoto, 0, carPhoto.length);
-//                carBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-//                byte[] baosArr = baos.toByteArray();
-//                carPicture.setImageBitmap(BitmapFactory.decodeByteArray(baosArr, 0, baosArr.length));
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
                 carBitmap = BitmapFactory.decodeByteArray(carPhoto, 0, carPhoto.length);
-                carPicture.setImageBitmap(carBitmap);
+                carBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                byte[] baosArr = baos.toByteArray();
+                carPicture.setImageBitmap(BitmapFactory.decodeByteArray(baosArr, 0, baosArr.length));
+                //carBitmap = BitmapFactory.decodeByteArray(carPhoto, 0, carPhoto.length);
+                //carPicture.setImageBitmap(carBitmap);
             }
         }
 
