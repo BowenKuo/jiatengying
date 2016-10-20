@@ -4,64 +4,64 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
-<!--
-    <ImageView
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
-        android:id="@+id/car"
-        android:src="@drawable/car"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="380dp" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="健康"
-        android:id="@+id/car_condition"
-        android:layout_alignBottom="@+id/car"
-        android:layout_centerHorizontal="true"
-        android:textSize="20dp"
-        android:textColor="#4d9867"
-        android:layout_marginTop="20dp" />
-
-    <TableRow
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignLeft="@+id/car"
-        android:layout_alignStart="@+id/car"
-        android:layout_marginBottom="40dp"
-        android:gravity="center"
-        android:id="@+id/tableRow">
-
-        <ImageButton
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:id="@+id/dashboard"
-            android:src="@drawable/ic_dashboard_green"
-            android:background="@null"
-
-            android:layout_column="1"
-            android:layout_alignTop="@+id/tableRow"
-            android:layout_toLeftOf="@+id/tableRow"
-            android:layout_toStartOf="@+id/tableRow" />
+    <!--
+        <ImageView
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/car"
+            android:src="@drawable/car"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="380dp" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="儀錶板"
-            android:id="@+id/dashboardtext"
-            android:layout_alignBottom="@+id/dashboard"
-            android:layout_toRightOf="@+id/dashboard"
-            android:layout_toEndOf="@+id/dashboard"
-            android:layout_gravity="center_vertical"
-            android:layout_marginBottom="10dp"
+            android:text="健康"
+            android:id="@+id/car_condition"
+            android:layout_alignBottom="@+id/car"
+            android:layout_centerHorizontal="true"
             android:textSize="20dp"
-            android:layout_column="2"/>
+            android:textColor="#4d9867"
+            android:layout_marginTop="20dp" />
 
-    </TableRow>
--->
+        <TableRow
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignLeft="@+id/car"
+            android:layout_alignStart="@+id/car"
+            android:layout_marginBottom="40dp"
+            android:gravity="center"
+            android:id="@+id/tableRow">
+
+            <ImageButton
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:id="@+id/dashboard"
+                android:src="@drawable/ic_dashboard_green"
+                android:background="@null"
+
+                android:layout_column="1"
+                android:layout_alignTop="@+id/tableRow"
+                android:layout_toLeftOf="@+id/tableRow"
+                android:layout_toStartOf="@+id/tableRow" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="儀錶板"
+                android:id="@+id/dashboardtext"
+                android:layout_alignBottom="@+id/dashboard"
+                android:layout_toRightOf="@+id/dashboard"
+                android:layout_toEndOf="@+id/dashboard"
+                android:layout_gravity="center_vertical"
+                android:layout_marginBottom="10dp"
+                android:textSize="20dp"
+                android:layout_column="2"/>
+
+        </TableRow>
+    -->
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
@@ -84,7 +84,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/status_not_connect"
-            android:textSize="30sp"
+            android:textSize="30dp"
             android:id="@+id/carStatus"
             android:layout_gravity="center_horizontal"
             android:textColor="@color/design_textinput_error_color_light"
@@ -98,21 +98,25 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="@string/dtcHistoryTitle"
         android:id="@+id/textView4"
-        android:textSize="20sp"
+        android:textSize="22dp"
         android:layout_below="@+id/linearLayout2"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_marginTop="36dp" />
+        android:layout_marginTop="20dp"
+        android:textColor="@color/colorPrimaryDark"
+        android:textStyle="bold"
+        android:paddingStart="30dp" />
 
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/clearHistory"
-        android:src="@mipmap/ic_launcher"
+        android:src="@drawable/can"
         android:layout_alignTop="@+id/textView4"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:clickable="true" />
+        android:clickable="true"
+        android:paddingEnd="25dp" />
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:layout_width="wrap_content"
@@ -123,30 +127,36 @@
         android:layout_alignEnd="@+id/clearHistory"
         android:layout_marginTop="24dp" ></android.support.v4.widget.SwipeRefreshLayout>
 
-    <Button
+    <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="@string/monitor"
-        android:id="@+id/toMonitor"
-        android:layout_alignParentBottom="true"
+        android:layout_height="70dp"
+        android:orientation="horizontal"
+        android:layout_alignBottom="@+id/refreshLayout"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_alignRight="@+id/textView4"
-        android:layout_alignEnd="@+id/textView4"
-        android:clickable="true" />
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:id="@+id/linearLayout3"
+        android:layout_marginBottom="-10dp">
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:id="@+id/toMonitor"
+            android:clickable="true"
+            android:layout_weight="1"
+            android:src="@drawable/dashboard"
+            android:background="@color/white"/>
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="@string/record"
-        android:id="@+id/toRecord"
-        android:layout_toRightOf="@+id/toMonitor"
-        android:layout_alignTop="@+id/toMonitor"
-        android:layout_alignRight="@+id/clearHistory"
-        android:layout_alignEnd="@+id/clearHistory"
-        android:clickable="true" />
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:id="@+id/toRecord"
+            android:clickable="true"
+            android:layout_weight="1"
+            android:src="@drawable/record"
+            android:background="@color/white"/>
+    </LinearLayout>
+
 
 
     <ListView
@@ -156,7 +166,8 @@
         android:layout_below="@+id/clearHistory"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_above="@+id/toMonitor" />
+        android:layout_above="@+id/linearLayout3"
+        android:paddingStart="20dp" />
 
 
 </RelativeLayout>

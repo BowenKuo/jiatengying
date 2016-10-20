@@ -17,7 +17,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -42,7 +42,7 @@ public class CarInfo extends Fragment implements SwipeRefreshLayout.OnRefreshLis
     //Variables
     private ImageView clearHistory, carPicture;
     private TextView carStatus;
-    private Button toMonitor, toRecord;
+    private ImageButton toMonitor, toRecord;
     private ListView listView;
     private BluetoothSocket socket;
     private Bitmap carBitmap;
@@ -58,8 +58,8 @@ public class CarInfo extends Fragment implements SwipeRefreshLayout.OnRefreshLis
         carPicture = (ImageView) view.findViewById(R.id.carPicture);
         clearHistory = (ImageView) view.findViewById(R.id.clearHistory);
         carStatus = (TextView) view.findViewById(R.id.carStatus);
-        toMonitor = (Button) view.findViewById(R.id.toMonitor);
-        toRecord = (Button) view.findViewById(R.id.toRecord);
+        toMonitor = (ImageButton) view.findViewById(R.id.toMonitor);
+        toRecord = (ImageButton) view.findViewById(R.id.toRecord);
         listView = (ListView) view.findViewById(R.id.troubleCodesHistory);
 
         carPicture.setOnClickListener(setCarPictureListener());
@@ -71,25 +71,8 @@ public class CarInfo extends Fragment implements SwipeRefreshLayout.OnRefreshLis
 
         sdb = new SQLiteHandler(getActivity().getApplicationContext());
         session = new SessionManager(getActivity().getApplicationContext());
-        // Check user have car in data
-        if (!session.isHadCar()) {
-            // We have no data about user's car, so user need to set one
-            Toast.makeText(getContext(), "請先做汽車基本設定",
-                    Toast.LENGTH_LONG).show();
-            Intent intent = new Intent(getActivity(), CarSettingActivity.class);
-            startActivity(intent);
-        } else {
-            byte[] carPhoto = sdb.getMcarPhoto();
-            if (carPhoto != null) {
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                carBitmap = BitmapFactory.decodeByteArray(carPhoto, 0, carPhoto.length);
-                carBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-                byte[] baosArr = baos.toByteArray();
-                carPicture.setImageBitmap(BitmapFactory.decodeByteArray(baosArr, 0, baosArr.length));
-                //carBitmap = BitmapFactory.decodeByteArray(carPhoto, 0, carPhoto.length);
-                //carPicture.setImageBitmap(carBitmap);
-            }
-        }
+
+        setCarImage();
 
         // Check Bluetooth Status
         if (adapter == null){
@@ -100,6 +83,30 @@ public class CarInfo extends Fragment implements SwipeRefreshLayout.OnRefreshLis
                         Toast.LENGTH_LONG).show();
                 Intent intentBt = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
                 startActivity(intentBt);
+            }
+        }
+    }
+
+    public void setCarImage() {
+        // Check user have car in data
+        if (!session.isHadCar()) {
+            // We have no data about user's car, so user need to set one
+            Toast.makeText(getContext(), "請先做汽車基本設定",
+                    Toast.LENGTH_LONG).show();
+            Intent intent = new Intent(getActivity(), CarSettingActivity.class);
+            startActivity(intent);
+        } else {
+            Log.w("Ya die", sdb.getMcarDetail().toString());
+            byte[] carPhoto = sdb.getMcarPhoto();
+            if (carPhoto != null) {
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+                carBitmap = BitmapFactory.decodeByteArray(carPhoto, 0, carPhoto.length);
+                carBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                byte[] baosArr = baos.toByteArray();
+                carPicture.setImageBitmap(BitmapFactory.decodeByteArray(baosArr, 0, baosArr.length));
+                //carBitmap = BitmapFactory.decodeByteArray(carPhoto, 0, carPhoto.length);
+                //carPicture.setImageBitmap(carBitmap);
             }
         }
     }
@@ -122,7 +129,7 @@ public class CarInfo extends Fragment implements SwipeRefreshLayout.OnRefreshLis
                     Intent intent = new Intent(getContext(),MonitorActivity.class);
 //                    socketSerializable = new BluetoothSocketSerializable(socket);
                     intent.putExtra("bluetoothSocket",address.toString());
-                    Log.e("test",(String) intent.getExtras().get("bluetoothSocket"));
+//                   // Log.e("test",(String) intent.getExtras().get("bluetoothSocket"));
                     getActivity().startActivity(intent);
                 }
             }
@@ -256,13 +263,16 @@ public class CarInfo extends Fragment implements SwipeRefreshLayout.OnRefreshLis
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.activity_carinfo, container, false);
+        Log.w("fuck", "car info on createView");
         initialize(view);
 //        return inflater.inflate(R.layout.activity_carinfo, container, false);
         return view;
     }
 
+
     @Override
     public void onRefresh() {
         loadUI();
+        Log.w("shit", "fuck you");
     }
 }

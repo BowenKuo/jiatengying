@@ -31,10 +31,10 @@ public class SQLiteHandler extends SQLiteOpenHelper{
     //mCar Table Name
     private  static  final String TABLE_MCAR = "mcar";
     //mCar Table Column names
-    private static final String CAR_BRAND = "brand";
-    private static final String CAR_TYPE = "type";
-    private static final String CAR_IMAGE_URL = "image_url";
-    private static final String CAR_IMAGE_BLOB = "image";
+    public static final String CAR_BRAND = "brand";
+    public static final String CAR_TYPE = "type";
+    public static final String CAR_IMAGE_URL = "image_url";
+    public static final String CAR_IMAGE_BLOB = "image";
 
     public SQLiteHandler(Context context){
         super(context,DATABASE_NAME,null,DATABASE_VERSION);
@@ -175,13 +175,12 @@ public class SQLiteHandler extends SQLiteOpenHelper{
         Log.d(TAG, "New car has been added");
     }
 
-    public void updateMcarPhoto(ContentValues cv, String id) {
+    public void updateMcar(ContentValues cv, String id) {
         SQLiteDatabase db = this.getWritableDatabase();
-        // Update mcar photo
         db.update(TABLE_MCAR, cv, KEY_ID+"="+id, null);
         db.close();
 
-        Log.d(TAG, "Update mcar photo in SQLite");
+        Log.d("fuck", "Update mcar detail in SQLite");
     }
 
     public HashMap<String,String> getMcarDetail(){
@@ -199,6 +198,10 @@ public class SQLiteHandler extends SQLiteOpenHelper{
             mcar.put("brand",cursor.getString(1));
             mcar.put("type",cursor.getString(2));
             mcar.put("image_url",cursor.getString(3));
+        } else {
+            cursor.close();
+            db.close();
+            return null;
         }
         cursor.close();
         db.close();

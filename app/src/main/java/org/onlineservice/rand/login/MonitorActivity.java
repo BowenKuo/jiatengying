@@ -39,6 +39,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.StringTokenizer;
 import java.util.UUID;
 
 import helper.BluetoothSocketSerializable;
@@ -59,6 +60,15 @@ public class MonitorActivity extends AppCompatActivity {
     private String deviceAddress;
     private BluetoothAdapter btAdapter = BluetoothAdapter.getDefaultAdapter();
     private Bundle bundle;
+    private static final String brakeTroubleCode = "P0571";
+    private static final String fogTroubleCode = "B2472";
+    private static final String turnLampTroubleCode = "B1499";
+    private static final String headLampTroubleCode = "B2249";
+
+    private boolean isBrakeGood = true;
+    private boolean isFogLampGood = true;
+    private boolean isTurnLampGood = true;
+    private boolean isHeadLampGood = true;
 
 
     //Private Method
@@ -105,16 +115,16 @@ public class MonitorActivity extends AppCompatActivity {
         frameLayoutMap.put("故障時行車距離", malFuncTime);
         frameLayoutMap.put("油耗", fuelLevel);
 
-        initFrameLayout(frameLayoutMap.get("水箱"), R.mipmap.alittlewaterbottle, "test");
-        initFrameLayout(frameLayoutMap.get("電瓶"), R.mipmap.alittlelightbottletest, "test");
+        initFrameLayout(frameLayoutMap.get("水箱"), R.mipmap.water_tank_for_vehicles_g, "test");
+        initFrameLayout(frameLayoutMap.get("電瓶"), R.mipmap.car_battery_g, "test");
         initFrameLayout(frameLayoutMap.get("引擎轉數"), R.mipmap.normalengine, "test");
-        initFrameLayout(frameLayoutMap.get("煞車"), R.mipmap.ic_launcher, "test");
-        initFrameLayout(frameLayoutMap.get("方向燈"), R.mipmap.dlightbad, "test");
+        initFrameLayout(frameLayoutMap.get("煞車"), R.mipmap.brake_disk_g, "test");
+        initFrameLayout(frameLayoutMap.get("方向燈"), R.mipmap.turn_signals_g, "test");
         initFrameLayout(frameLayoutMap.get("大燈"), R.mipmap.frontlightbad, "test");
-        initFrameLayout(frameLayoutMap.get("前霧燈"), R.mipmap.fflightgood, "test");
+        initFrameLayout(frameLayoutMap.get("前霧燈"), R.mipmap.fog_light_g, "test");
         initFrameLayout(frameLayoutMap.get("後霧燈"), R.mipmap.blightgood, "test");
         initFrameLayout(frameLayoutMap.get("故障時行車距離"), R.mipmap.toolongtime, "test");
-        initFrameLayout(frameLayoutMap.get("油耗"), R.mipmap.alittleoil, "test");
+        initFrameLayout(frameLayoutMap.get("油耗"), R.mipmap.fuel_g, "test");
 
         adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_multiple_choice,
                 frameLayoutMap.keySet().toArray());
@@ -382,10 +392,18 @@ public class MonitorActivity extends AppCompatActivity {
                     }
 
                     final String finalResult = result;
+                    final double value = Double.parseDouble(result.replace("%",""));
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             frameLayoutMap.get("油耗").setText(finalResult);
+                            if(value<=15){
+                                frameLayoutMap.get("油耗").setImageResource(R.mipmap.fuel_o);
+                            }else if (value<=30){
+                                frameLayoutMap.get("油耗").setImageResource(R.mipmap.fuel_r);
+                            }else {
+                                frameLayoutMap.get("油耗").setImageResource(R.mipmap.fuel_g);
+                            }
                         }
                     });
 
@@ -412,15 +430,24 @@ public class MonitorActivity extends AppCompatActivity {
                     }
 
                     final String finalResult = result;
+                    final double value = Double.parseDouble(finalResult.replace("V",""));
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             frameLayoutMap.get("電瓶").setText(finalResult);
+                            if (value <= 11.15){
+                                frameLayoutMap.get("電瓶").setImageResource(R.mipmap.car_battery_r);
+                            }else if (value <=11.5){
+                                frameLayoutMap.get("電瓶").setImageResource(R.mipmap.car_battery_o);
+                            }else{
+                                frameLayoutMap.get("電瓶").setImageResource(R.mipmap.car_battery_g);
+                            }
                         }
                     });
 
                     try {
-                        Thread.sleep(60000);
+                        //Thread.sleep(60000);
+                        Thread.sleep(5000);//for test
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -471,19 +498,60 @@ public class MonitorActivity extends AppCompatActivity {
                         Log.wtf(this.getClass().getName(), "Trouble");
                     }
 
-                    if (result.isEmpty()) {
-                        result = "No trouble code";
+                    if (!result.isEmpty()){
+                        //TODO Tokenize the trouble code
+                        StringTokenizer tokenizer = new StringTokenizer(result);
+                        Log.wtf("DIE!!",result);
+                        while(tokenizer.hasMoreTokens()){
+                            String tmp = tokenizer.nextToken();
+                            if (tmp.equalsIgnoreCase(fogTroubleCode)){
+                                isFogLampGood = false;
+                            }else if(tmp.equalsIgnoreCase(brakeTroubleCode)){
+                                isBrakeGood = false;
+                                Log.wtf("DIE",brakeTroubleCode);
+                            }else if(tmp.equalsIgnoreCase(headLampTroubleCode)){
+                                isHeadLampGood = false;
+                            }else if(tmp.equalsIgnoreCase(turnLampTroubleCode)){
+                                isTurnLampGood = false;
+                            }else {
+                                doNothing();
+                            }
+                        }
                     }
+
                     final String finalResult = result;
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-
+                            if (finalResult.isEmpty()){
+                                //At good condition~
+                                frameLayoutMap.get("煞車").setImageResource(R.mipmap.brake_disk_g);
+                                frameLayoutMap.get("方向燈").setImageResource(R.mipmap.turn_signals_g);
+                                frameLayoutMap.get("大燈").setImageResource(R.mipmap.fflightgood);
+                                frameLayoutMap.get("前霧燈").setImageResource(R.mipmap.fog_light_g);
+                                frameLayoutMap.get("後霧燈").setImageResource(R.mipmap.fflightgood);
+                            }else{
+                                //TODO Change picture
+                                if (!isFogLampGood) {
+                                    frameLayoutMap.get("前霧燈").setImageResource(R.mipmap.fog_light_r);
+                                    frameLayoutMap.get("後霧燈").setImageResource(R.mipmap.fog_light_r);
+                                }
+                                if (!isBrakeGood){
+                                    frameLayoutMap.get("煞車").setImageResource(R.mipmap.brake_disk_r);
+                                    Log.wtf("DIE","WELL");
+                                }
+                                if (!isHeadLampGood){
+                                    frameLayoutMap.get("大燈").setImageResource(R.mipmap.high_beam_r);
+                                }
+                                if (!isTurnLampGood){
+                                    frameLayoutMap.get("方向燈").setImageResource(R.mipmap.dlightbad);
+                                }
+                            }
                         }
                     });
 
                     try {
-                        Thread.sleep(60000);
+                        Thread.sleep(6000);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -565,6 +633,10 @@ public class MonitorActivity extends AppCompatActivity {
             throws IOException, InterruptedException {
         command.run(socket.getInputStream(), socket.getOutputStream());
         return command.getFormattedResult();
+    }
+
+    private void doNothing(){
+        //TODO nothing
     }
 
     //Override Methods

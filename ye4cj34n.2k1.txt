@@ -1,0 +1,13 @@
+﻿0.0 test 
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+# On branch master
+# Your branch is behind 'origin/master' by 5 commits, and can be fast-forwarded.
+#   (use "git pull" to update your local branch)
+#
+# Changes to be committed:
+#	new file:   33edy4di.jsg.txt
+#	modified:   app/src/main/java/org/onlineservice/rand/login/CarInfo.java
+#	modified:   app/src/main/java/org/onlineservice/rand/login/MonitorActivity.java
+#
+

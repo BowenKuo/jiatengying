@@ -59,7 +59,7 @@ public class CarSettingActivity extends AppCompatActivity {
     String CAR_BRANDS_URL = "https://whatsupbooboo.me/booboo/connect_db-shit/get_car_brand.php";
     String CAR_TYPES_URL = "https://whatsupbooboo.me/booboo/connect_db-shit/get_car_type.php";
     String ADD_MYCAR_URL = "https://whatsupbooboo.me/booboo/connect_db-shit/setMcar.php";
-    String BASIC_CAR_IMAGE_URL = "https://whatsupbooboo.me/booboo/img/car_image/";
+    String BASIC_CAR_IMAGE_URL = "https://whatsupbooboo.me/booboo/img/car_image_jpg/";
     private byte[] img = null;
     RequestQueue mQueue;
     Context mContext;
@@ -124,6 +124,12 @@ public class CarSettingActivity extends AppCompatActivity {
                 if (!car_brand_selected.isEmpty() && !car_type_selected.isEmpty()) {
                     Log.w("User detail", db.getUserDetail().toString());
                     addInMycar(car_brand_selected, car_type_selected, car_image_url, db.getUserDetail().get("mid"));
+                    try {
+                        Thread.sleep(500);
+                    } catch (InterruptedException e) {
+                        Log.d("error", String.valueOf(e));
+                    }
+                    Toast.makeText(getApplicationContext(), "汽車基本設定成功", Toast.LENGTH_LONG).show();
                     Intent intent = new Intent(v.getContext(), MainActivity.class);
                     startActivity(intent);
                 } else {
@@ -136,6 +142,7 @@ public class CarSettingActivity extends AppCompatActivity {
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
+
 
     public void get_car_brands() {
         // before user choose car brand, we need to disable the spinner of car type
@@ -237,7 +244,7 @@ public class CarSettingActivity extends AppCompatActivity {
                             pDialog.setMessage("獲取該車款圖片中 ...");
                             showDialog();
                             car_type_selected = car_type_lunch.get(position);
-                            car_image_url = car_brand_selected + "-" + car_type_selected + ".png";
+                            car_image_url = car_brand_selected + "-" + car_type_selected + ".jpg";
                             //建立一個AsyncTask執行緒進行圖片讀取動作，並帶入圖片連結網址路徑
                             new AsyncTask<String, Void, Bitmap>() {
                                 @Override
@@ -317,15 +324,19 @@ public class CarSettingActivity extends AppCompatActivity {
                     if (!error) {
                         // add in mcar (SQLite)
                         session.setCar(true);
-                        db.addMcar(car_brand, car_type, car_image_url);
+                        if(db.getMcarDetail() == null) {
+                            db.addMcar(car_brand, car_type, car_image_url);
+                        }
                         mcarmap = db.getMcarDetail();
                         Log.w("mcarmap", mcarmap.toString());
                         img = Setting.getbyteImage(car_selected_image);
                         ContentValues cv = new ContentValues();
-                        cv.put("image", img);
+                        cv.put(SQLiteHandler.CAR_IMAGE_BLOB, img);
+                        cv.put(SQLiteHandler.CAR_BRAND, car_brand);
+                        cv.put(SQLiteHandler.CAR_TYPE, car_type);
+                        cv.put(SQLiteHandler.CAR_IMAGE_URL, car_image_url);
                         String id = mcarmap.get("_id");
-                        db.updateMcarPhoto(cv, id);
-                        Toast.makeText(getApplicationContext(), "汽車基本設定成功", Toast.LENGTH_LONG).show();
+                        db.updateMcar(cv, id);
                     } else {
                         // Error in login. Get the error message
                         String errorMsg = jObj.getString("error_msg");
