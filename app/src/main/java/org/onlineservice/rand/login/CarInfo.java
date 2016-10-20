@@ -67,6 +67,7 @@ public class CarInfo extends Fragment implements SwipeRefreshLayout.OnRefreshLis
     private MyAdapter listAdapter;
     private BluetoothSocket socket;
     private Bitmap carBitmap;
+    String errorcodeS;
     //private BluetoothSocketSerializable socketSerializable;
     private String address = null;
     private String deviceAddress;
@@ -318,6 +319,7 @@ public class CarInfo extends Fragment implements SwipeRefreshLayout.OnRefreshLis
                             String objTimeValue = object.getString("ceTime");
                             String objcodeValue = object.getString("errorcode");
                             String objinfoValue = object.getString("einfo");
+                            errorcodeS = objcodeValue;
                             byte ptext[];
                             try {
                                 ptext = objinfoValue.getBytes("ISO-8859-1");
@@ -338,7 +340,16 @@ public class CarInfo extends Fragment implements SwipeRefreshLayout.OnRefreshLis
                     listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                            Toast.makeText(getActivity().getApplicationContext(), "你選擇的是" + error_code.get(position), Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(getActivity(), ErrorcodeActivity.class);
+                            Bundle bundle = new Bundle();
+                            bundle.putString("Errorcode"     , error_code.get(position).getid());
+                            bundle.putString("Errorcodeinfo"   , error_code.get(position).getinfo());
+                            intent.putExtras(bundle);
+                            Log.d("選擇的",error_code.get(position).getid());
+                            Toast.makeText(getActivity().getApplicationContext(), "你選擇的是" + error_code.get(position).getid(), Toast.LENGTH_SHORT).show();
+                            startActivity(intent);
+
+
                         }
                     });
 
