@@ -6,6 +6,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 
 import com.google.android.gms.location.LocationListener;
 
@@ -18,13 +19,15 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
 
     private SQLiteHandler db;
     private SessionManager session;
+    private ViewPager viewPager;
+    private PagerAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         //View decorView = getWindow().getDecorView();
-        
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -35,8 +38,8 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         tabLayout.addTab(tabLayout.newTab().setText("Setting"));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
-        final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
-        final PagerAdapter adapter = new PagerAdapter
+        viewPager = (ViewPager) findViewById(R.id.pager);
+        adapter = new PagerAdapter
                 (getSupportFragmentManager(), tabLayout.getTabCount());
         viewPager.setAdapter(adapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
@@ -56,7 +59,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
 
             }
         });
-        
+
         // SqLite database handler
         db = new SQLiteHandler(getApplicationContext());
 
@@ -72,6 +75,18 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
 
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        int item_n = viewPager.getCurrentItem();
+//        viewPager.getAdapter()
+        Log.w("fuck", String.valueOf(item_n));
+        if (item_n == 0) {
+            adapter.notifyDataSetChanged();
+            Log.w("fuck", "you !!!");
+        }
+        Log.w("fuck", "you");
+    }
     /**
      * Logging out the user. Will set isLoggedIn flag to false in shared
      * preferences Clears the user data from sqlite users table

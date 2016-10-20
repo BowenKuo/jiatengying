@@ -13,7 +13,7 @@ public class SQLiteHandler extends SQLiteOpenHelper{
     private static final String TAG = SQLiteHandler.class.getSimpleName();
     /* All Static Value for Setting SQLite Database */
     //Database Version
-    private static final short DATABASE_VERSION = 3;
+    private static final short DATABASE_VERSION = 7;
     //Database Name
     private static final String DATABASE_NAME = "Session";
     //Login Table Name
@@ -31,9 +31,10 @@ public class SQLiteHandler extends SQLiteOpenHelper{
     //mCar Table Name
     private  static  final String TABLE_MCAR = "mcar";
     //mCar Table Column names
-    private static final String CAR_BRAND = "brand";
-    private static final String CAR_TYPE = "type";
-    private static final String CAR_IMAGE_URL = "image_url";
+    public static final String CAR_BRAND = "brand";
+    public static final String CAR_TYPE = "type";
+    public static final String CAR_IMAGE_URL = "image_url";
+    public static final String CAR_IMAGE_BLOB = "image";
 
     public SQLiteHandler(Context context){
         super(context,DATABASE_NAME,null,DATABASE_VERSION);
@@ -43,7 +44,7 @@ public class SQLiteHandler extends SQLiteOpenHelper{
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         //SQL syntax
-        String CREATE_LOGIN_TABLE = "CREATE TABLE " + TABLE_USER + "("
+        String CREATE_LOGIN_TABLE = "CREATE TABLE IF NOT EXISTS " + TABLE_USER + "("
                 + KEY_ID + " INTEGER PRIMARY KEY,"
                 + KEY_NAME + " TEXT,"
                 + KEY_EMAIL + " TEXT UNIQUE,"
@@ -55,11 +56,12 @@ public class SQLiteHandler extends SQLiteOpenHelper{
                 + KEY_CREATED_AT + " TEXT" + ")";
         sqLiteDatabase.execSQL(CREATE_LOGIN_TABLE);
 
-        String CREATE_MCAR_TABLE = "CREATE TABLE " + TABLE_MCAR + "("
+        String CREATE_MCAR_TABLE = "CREATE TABLE IF NOT EXISTS " + TABLE_MCAR + "("
                 + KEY_ID + " INTEGER PRIMARY KEY,"
                 + CAR_BRAND + " TEXT,"
                 + CAR_TYPE + " TEXT,"
-                + CAR_IMAGE_URL + " TEXT)";
+                + CAR_IMAGE_URL + " TEXT,"
+                + CAR_IMAGE_BLOB + " BLOB)";
         sqLiteDatabase.execSQL(CREATE_MCAR_TABLE);
 
         Log.d(TAG, "Database tables created");
@@ -126,13 +128,13 @@ public class SQLiteHandler extends SQLiteOpenHelper{
         return user;
     }
 
-    public byte[] getPhoto(){
+    public byte[] getUserPhoto(){
         String query = "SELECT * FROM " + TABLE_USER;
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(query, null);
         byte[] photo = null;
         if (cursor.moveToFirst())
-            photo = cursor.getBlob(cursor.getColumnIndex("photo"));
+            photo = cursor.getBlob(cursor.getColumnIndex(KEY_PHOTO));
         db.close();
         return photo;
     }
@@ -143,7 +145,7 @@ public class SQLiteHandler extends SQLiteOpenHelper{
         Cursor cursor = db.rawQuery(query, null);
         String mid = null;
         if (cursor.moveToFirst())
-            mid = cursor.getString(cursor.getColumnIndex("mid"));
+            mid = cursor.getString(cursor.getColumnIndex("uid"));
         db.close();
         return mid;
     }
@@ -184,6 +186,14 @@ public class SQLiteHandler extends SQLiteOpenHelper{
         Log.d(TAG, "New car has been added");
     }
 
+    public void updateMcar(ContentValues cv, String id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.update(TABLE_MCAR, cv, KEY_ID+"="+id, null);
+        db.close();
+
+        Log.d("fuck", "Update mcar detail in SQLite");
+    }
+
     public HashMap<String,String> getMcarDetail(){
         HashMap<String,String> mcar = new HashMap<>();
         String query = "SELECT * FROM " + TABLE_MCAR;
@@ -199,6 +209,10 @@ public class SQLiteHandler extends SQLiteOpenHelper{
             mcar.put("brand",cursor.getString(1));
             mcar.put("type",cursor.getString(2));
             mcar.put("image_url",cursor.getString(3));
+        } else {
+            cursor.close();
+            db.close();
+            return null;
         }
         cursor.close();
         db.close();
@@ -206,5 +220,25 @@ public class SQLiteHandler extends SQLiteOpenHelper{
 
         //return value
         return mcar;
+    }
+
+    public byte[] getMcarPhoto(){
+        String query = "SELECT * FROM " + TABLE_MCAR;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(query, null);
+        byte[] photo = null;
+        if (cursor.moveToFirst())
+            photo = cursor.getBlob(4);
+        db.close();
+        return photo;
+    }
+
+    public void deleteMcar() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        // Delete All Rows
+        db.delete(TABLE_MCAR, null, null);
+        db.close();
+
+        Log.d(TAG, "Deleted all user info from sqlite");
     }
 }

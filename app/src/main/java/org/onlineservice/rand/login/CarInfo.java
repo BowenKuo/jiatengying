@@ -5,6 +5,8 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -17,9 +19,7 @@ import android.view.ViewGroup;
 
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-
-import android.widget.Button;
-
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -47,6 +47,7 @@ import java.util.Set;
 import java.util.UUID;
 
 import helper.SQLiteHandler;
+import helper.SessionManager;
 
 /**
   * Created by Rand on 2016/9/13.  double  e = 2.718281828
@@ -56,7 +57,7 @@ public class CarInfo extends Fragment implements SwipeRefreshLayout.OnRefreshLis
     //Variables
     private ImageView clearHistory, carPicture;
     private TextView carStatus;
-    private Button toMonitor, toRecord;
+    private ImageButton toMonitor, toRecord;
     private ListView listView;
     RequestQueue mQueue;
     private SQLiteHandler db;
@@ -65,9 +66,12 @@ public class CarInfo extends Fragment implements SwipeRefreshLayout.OnRefreshLis
     private Map<String,String> user = new HashMap<>();
     private MyAdapter listAdapter;
     private BluetoothSocket socket;
+    private Bitmap carBitmap;
     //private BluetoothSocketSerializable socketSerializable;
     private String address = null;
     private String deviceAddress;
+    private SQLiteHandler sdb;
+    private SessionManager session;
     private BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
     ArrayList<errorcodelist> error_code = new ArrayList<errorcodelist>();
 
@@ -76,8 +80,8 @@ public class CarInfo extends Fragment implements SwipeRefreshLayout.OnRefreshLis
         carPicture = (ImageView) view.findViewById(R.id.carPicture);
         clearHistory = (ImageView) view.findViewById(R.id.clearHistory);
         carStatus = (TextView) view.findViewById(R.id.carStatus);
-        toMonitor = (Button) view.findViewById(R.id.toMonitor);
-        toRecord = (Button) view.findViewById(R.id.toRecord);
+        toMonitor = (ImageButton) view.findViewById(R.id.toMonitor);
+        toRecord = (ImageButton) view.findViewById(R.id.toRecord);
         listView = (ListView) view.findViewById(R.id.troubleCodesHistory);
 
         carPicture.setOnClickListener(setCarPictureListener());
@@ -89,6 +93,13 @@ public class CarInfo extends Fragment implements SwipeRefreshLayout.OnRefreshLis
         mQueue = Volley.newRequestQueue(getActivity());
         loadUI();
         //Check Bluetooth Status
+
+        sdb = new SQLiteHandler(getActivity().getApplicationContext());
+        session = new SessionManager(getActivity().getApplicationContext());
+
+        setCarImage();
+
+        // Check Bluetooth Status
         if (adapter == null){
             Toast.makeText(getContext(),R.string.bluetoothNotAvailable,Toast.LENGTH_LONG).show();
         }else{
@@ -100,6 +111,24 @@ public class CarInfo extends Fragment implements SwipeRefreshLayout.OnRefreshLis
             }
         }
 
+    }
+
+    public void setCarImage() {
+        // Check user have car in data
+        if (session.isHadCar() == false) {
+            // We have no data about user's car, so user need to set one
+            Toast.makeText(getContext(), "請先做汽車基本設定",
+                    Toast.LENGTH_LONG).show();
+            Intent intent = new Intent(getActivity(), CarSettingActivity.class);
+            startActivity(intent);
+        } else {
+            Log.w(" car info car details", sdb.getMcarDetail().toString());
+            byte[] carPhoto = sdb.getMcarPhoto();
+            if (carPhoto != null) {
+                carBitmap = BitmapFactory.decodeByteArray(carPhoto, 0, carPhoto.length);
+                carPicture.setImageBitmap(carBitmap);
+            }
+        }
     }
 
     //ToMonitorOnClickListener
@@ -120,7 +149,7 @@ public class CarInfo extends Fragment implements SwipeRefreshLayout.OnRefreshLis
                     Intent intent = new Intent(getContext(),MonitorActivity.class);
 //                    socketSerializable = new BluetoothSocketSerializable(socket);
                     intent.putExtra("bluetoothSocket",address.toString());
-                    Log.e("test",(String) intent.getExtras().get("bluetoothSocket"));
+//                   // Log.e("test",(String) intent.getExtras().get("bluetoothSocket"));
                     getActivity().startActivity(intent);
                 }
             }
@@ -242,9 +271,8 @@ public class CarInfo extends Fragment implements SwipeRefreshLayout.OnRefreshLis
     private void loadUI() {
         //TODO  Get Obd2 trouble codes  ;  Load data from Database
         db = new SQLiteHandler(getActivity().getApplicationContext());
-        user = db.getUserDetail();
-        mid =user.get("mid").toString();
-        Log.d("dafdsaf",mid);
+        mid = db.getMid();
+        Log.w("fuck mid", mid);
         get_error_code(mid);
         Log.d("jdfidjfi","goodgoodeat");
 
@@ -263,6 +291,7 @@ public class CarInfo extends Fragment implements SwipeRefreshLayout.OnRefreshLis
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.activity_carinfo, container, false);
+        Log.w("fuck", "car info on createView");
         initialize(view);
 //        return inflater.inflate(R.layout.activity_carinfo, container, false);
         return view;
@@ -340,5 +369,6 @@ public class CarInfo extends Fragment implements SwipeRefreshLayout.OnRefreshLis
     @Override
     public void onRefresh() {
         loadUI();
+        Log.w("shit", "fuck you");
     }
 }

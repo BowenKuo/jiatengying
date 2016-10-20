@@ -11,6 +11,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -45,7 +46,8 @@ import java.util.ArrayList;
  * Created by Lillian Wu on 2016/7/20.
  */
 public class Nevigation extends Fragment implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
-    private Context thisActivity = getActivity();
+    private Context thisActivity;
+    private Nevigation nevigation = this;
     private GoogleMap mMap;
     private MapView mapView;
     private GoogleApiClient mGoogleApiClient;
@@ -58,7 +60,7 @@ public class Nevigation extends Fragment implements OnMapReadyCallback, GoogleAp
     private JsonDirection jsonDirectionResults;
     private DirectionSpeaker directionSpeaker;
     private LocationRequest locationRequest;
-    private LocationListener locationListener;
+
 
     @Override
     public void onAttach(Context context) {
@@ -75,14 +77,14 @@ public class Nevigation extends Fragment implements OnMapReadyCallback, GoogleAp
         mapView.onCreate(savedInstanceState);
         mapView.onResume();// needed to get the map to display immediately
 
-        MapsInitializer.initialize(getActivity());
+        MapsInitializer.initialize(thisActivity);
 
         // Update user location & set up all API will be used
         mGoogleApiClient = new GoogleApiClient
-                .Builder(getActivity())
+                .Builder(thisActivity)
                 .addApi(Places.GEO_DATA_API)
                 .addApi(Places.PLACE_DETECTION_API)
-                .enableAutoManage(getActivity(), this)
+                .enableAutoManage((FragmentActivity) thisActivity, this)
                 .addApi(LocationServices.API)
                 .addConnectionCallbacks(this)
                 .build();
@@ -97,17 +99,7 @@ public class Nevigation extends Fragment implements OnMapReadyCallback, GoogleAp
             @Override
             public boolean onQueryTextChange(String input) {
                 mMap.clear();
-                locationListener = new LocationListener() {
-                    // @Override
-                    public void onStatusChanged(String provider, int status, Bundle extras) {
-                        // TODO locationListenerGPS onStatusChanged
-                    }
-
-                    // @Override
-                    public void onLocationChanged(Location location) {
-                    }
-                };
-                LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, locationListener);
+//                LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, nevigation);
                 new TaskLocationSearch(input, lastLocation) {
                     @Override
                     protected void onResult() {
@@ -246,7 +238,8 @@ public class Nevigation extends Fragment implements OnMapReadyCallback, GoogleAp
     public void onConnected(@Nullable Bundle bundle) {
         try {
             // SecurityException
-            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, locationRequest, this);
+            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, locationRequest, nevigation);
+
         } catch (SecurityException | NullPointerException e) {
             Log.d("onConnected", "Exception!");
         }
@@ -273,6 +266,7 @@ public class Nevigation extends Fragment implements OnMapReadyCallback, GoogleAp
                     lastLocation = location;
                     lastLatLng = new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude());
                     mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 17));
+                    Log.d("Location Changing", "Location Updating");
                 } catch (SecurityException e) {
                     Log.d("onLocationChanged", "SecurityException");
                 }
@@ -284,7 +278,7 @@ public class Nevigation extends Fragment implements OnMapReadyCallback, GoogleAp
                     lastLatLng = new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude());
                     mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 17));
                     LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
-//                    Toast.makeText(thisActivity, "LOCATION_FIRST_UPDATE", Toast.LENGTH_LONG).show();
+                    Log.d("Location Changed", "First Location Changing");
                 } catch (SecurityException e) {
                     Log.d("onLocationChanged", "SecurityException");
                 }
@@ -314,7 +308,7 @@ public class Nevigation extends Fragment implements OnMapReadyCallback, GoogleAp
                     // for ActivityCompat#requestPermissions for more details.
                     return;
                 }
-                LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, locationRequest, (LocationListener) thisActivity);
+                LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, locationRequest, nevigation);
             }
         }.execute();
         new TaskNearByCS(lastLatLng, new LatLng(selectedLocation.getLocation().lat, selectedLocation.getLocation().lng)) {
