@@ -63,7 +63,6 @@ public class CarInfo extends Fragment implements SwipeRefreshLayout.OnRefreshLis
     private SQLiteHandler db;
     private String ERROR_CODE_URL="https://whatsupbooboo.me/booboo/connect_db-shit/get_car_error.php";
     private String mid;
-    private Map<String,String> user = new HashMap<>();
     private MyAdapter listAdapter;
     private BluetoothSocket socket;
     private Bitmap carBitmap;
