@@ -1,17 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent" android:layout_height="match_parent">
 
     <view
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/record"
         class="org.onlineservice.rand.login.ScalableFrameLayout"
-        android:id="@+id/radiator" />
+        android:id="@+id/fuelLow"
+        android:layout_width="185dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_height="130dp" />
 
     <view
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="185dp"
         class="org.onlineservice.rand.login.ScalableFrameLayout"
-        android:id="@+id/view2" />
-</FrameLayout>
+        android:id="@+id/bLight"
+        android:layout_height="130dp"
+        android:layout_below="@+id/radiator"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <view
+        android:src="@drawable/record"
+        class="org.onlineservice.rand.login.ScalableFrameLayout"
+        android:id="@+id/radiator"
+        android:layout_width="185dp"
+        android:layout_height="130dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <view
+        android:layout_width="185dp"
+        class="org.onlineservice.rand.login.ScalableFrameLayout"
+        android:id="@+id/dLight"
+        android:layout_height="130dp"
+        android:layout_below="@+id/fuelLow"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <view
+        android:layout_height="130dp"
+        class="org.onlineservice.rand.login.ScalableFrameLayout"
+        android:id="@+id/frontFogLight"
+        android:layout_width="185dp"
+        android:layout_below="@+id/battery"
+        android:layout_alignRight="@+id/rpm"
+        android:layout_alignEnd="@+id/rpm" />
+
+    <view
+        android:layout_width="185dp"
+        class="org.onlineservice.rand.login.ScalableFrameLayout"
+        android:id="@+id/battery"
+        android:layout_height="130dp"
+        android:layout_below="@+id/dLight"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <view
+        class="org.onlineservice.rand.login.ScalableFrameLayout"
+        android:id="@+id/brake"
+        android:layout_width="185dp"
+        android:layout_height="135dp"
+        android:layout_below="@+id/battery"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <view
+        android:layout_width="185dp"
+        android:layout_height="135dp"
+        class="org.onlineservice.rand.login.ScalableFrameLayout"
+        android:id="@+id/rpm"
+        android:layout_below="@+id/bLight"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+</RelativeLayout>

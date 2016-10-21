@@ -54,6 +54,7 @@
 
         <activity android:name=".GarageInfoActivity" />
         <activity android:name=".CarSettingActivity" />
+        <activity android:name=".FixedMonitorActivity"/>
         <activity android:name=".Record" />
         <activity android:name=".MonitorActivity" />
     </application>

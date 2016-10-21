@@ -23,12 +23,19 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.pires.obd.commands.ObdCommand;
+import com.github.pires.obd.commands.control.DtcNumberCommand;
+import com.github.pires.obd.commands.control.TroubleCodesCommand;
 import com.github.pires.obd.commands.protocol.EchoOffCommand;
+import com.github.pires.obd.commands.protocol.LineFeedOffCommand;
+import com.github.pires.obd.commands.protocol.SelectProtocolCommand;
+import com.github.pires.obd.enums.ObdProtocols;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Set;
+import java.util.StringTokenizer;
 import java.util.UUID;
 
 import helper.SQLiteHandler;
@@ -126,7 +133,7 @@ public class CarInfo extends Fragment implements SwipeRefreshLayout.OnRefreshLis
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                    Intent intent = new Intent(getContext(),MonitorActivity.class);
+                    Intent intent = new Intent(getContext(),FixedMonitorActivity.class);
 //                    socketSerializable = new BluetoothSocketSerializable(socket);
                     intent.putExtra("bluetoothSocket",address.toString());
 //                   // Log.e("test",(String) intent.getExtras().get("bluetoothSocket"));
@@ -189,6 +196,13 @@ public class CarInfo extends Fragment implements SwipeRefreshLayout.OnRefreshLis
         };
     }
 
+    private synchronized String executeCommand(@NonNull final ObdCommand command,
+                                               @NonNull final BluetoothSocket socket)
+            throws IOException, InterruptedException {
+        command.run(socket.getInputStream(), socket.getOutputStream());
+        return command.getFormattedResult();
+    }
+
     //Show Alert Dialog
     private void showAlertDialog(@NonNull final BluetoothAdapter btAdapter,
                                  @NonNull ArrayList deviceStrs,
@@ -231,12 +245,84 @@ public class CarInfo extends Fragment implements SwipeRefreshLayout.OnRefreshLis
                 }
                 address = deviceAddress;
                 try {
-                    new EchoOffCommand().run(socket.getInputStream(),socket.getOutputStream());
+                    executeCommand(new EchoOffCommand(),socket);
+                    executeCommand(new LineFeedOffCommand(),socket);
+                    executeCommand(new SelectProtocolCommand(ObdProtocols.ISO_15765_4_CAN),socket);
                 } catch (IOException | InterruptedException e) {
                     e.printStackTrace();
                     Toast.makeText(getActivity().getApplicationContext(), e.toString() + deviceAddress, Toast.LENGTH_LONG)
                             .show();
                 }
+
+                Thread dtcNumberThread = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        String result = "";
+                        while (!Thread.currentThread().isInterrupted()) {
+                            try {
+                                result = executeCommand(new DtcNumberCommand(), socket);
+                            } catch (IOException | InterruptedException e) {
+                                e.printStackTrace();
+                                Log.wtf(this.getClass().getName(), "DtcNumber");
+                            }
+
+                            final String finalResult = result;
+                            final int value = Integer.parseInt(finalResult.replace(" codes","").replace("MIL is ON",""));
+                            getActivity().runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Log.e("WTF","WTF");
+                                    /*if (value > 0){
+                                        carStatus.setText("WEAK");
+                                    }else
+                                        carStatus.setText("GOOD");
+                                     */
+                                }
+                            });
+
+                            try {
+                                Thread.sleep(6000);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                });
+
+                // Get TroubleCode
+        Thread troubleCodeThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                String result = "";
+                while (!Thread.currentThread().isInterrupted()) {
+                    try {
+                        result = executeCommand(new TroubleCodesCommand(), socket);
+                    } catch (IOException | InterruptedException e) {
+                        e.printStackTrace();
+                        Log.wtf(this.getClass().getName(), "Trouble");
+                    }
+
+                    if (!result.isEmpty()){
+                        //TODO Tokenize the trouble code
+                        StringTokenizer tokenizer = new StringTokenizer(result);
+                        while(tokenizer.hasMoreTokens()){
+
+                        }
+                    }
+
+                    final String finalResult = result;
+
+                    try {
+                        Thread.sleep(6000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+
+                //dtcNumberThread.run();
+
             }
         });
 
