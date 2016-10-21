@@ -56,7 +56,7 @@ public class ErrorcodeActivity extends AppCompatActivity {
     RequestQueue mQueue;
     SQLiteHandler sdb;
     private ProgressDialog pDialog;
-    String SEND_COMMENT_URL = "";
+    String SEND_COMMENT_URL = "https://whatsupbooboo.me/booboo/connect_db-shit/send_car_error_comment.php";
     String ERROR_CODE_COMMENT_URL = "https://whatsupbooboo.me/booboo/connect_db-shit/get_car_error_comment.php";
     ArrayList<Errorcomment> error_comment = new ArrayList<Errorcomment>();
 
