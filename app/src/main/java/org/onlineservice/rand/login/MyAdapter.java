@@ -1,7 +1,6 @@
 package org.onlineservice.rand.login;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,38 +13,39 @@ import java.util.List;
  * Created by leoGod on 2016/10/20.
  */
 
-public class MyAdapter extends BaseAdapter {
+public class MyAdapter extends BaseAdapter{
     private LayoutInflater myInflater;
-    private List<errorcodelist> errorcode;
-    public MyAdapter(Context context, List<errorcodelist> errorcode){
+    private List<errorcodelist> errorcodelist;
+
+    public MyAdapter(Context context,List<errorcodelist> errorcodelist){
         myInflater = LayoutInflater.from(context);
-        this.errorcode = errorcode;
+        this.errorcodelist = errorcodelist;
     }
     @Override
     public int getCount() {
-        return errorcode.size();
+        return errorcodelist.size();
     }
 
     @Override
     public Object getItem(int arg0) {
-        return errorcode.get(arg0);
+        return errorcodelist.get(arg0);
     }
 
     @Override
     public long getItemId(int position) {
-        return errorcode.indexOf(getItem(position));
+        return errorcodelist.indexOf(getItem(position));
     }
+
     private class ViewHolder {
         TextView txtec;
         TextView txtinfo;
         TextView txtTime;
         public ViewHolder(TextView txtec, TextView txtinfo, TextView txtTime){
             this.txtec = txtec;
-            this.txtinfo = txtinfo;
+            this.txtinfo=txtinfo;
             this.txtTime = txtTime;
         }
     }
-
 
 
     @Override

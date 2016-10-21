@@ -21,6 +21,7 @@ public class NetworkHelper {
     private final static String URL_GET_COMMENT  = URL_DOMAIN + "retrieve_comment.php";
     private final static String URL_GET_COUPON   = URL_DOMAIN + "coupon.php";
     private final static String URL_SEND_COMMENT = URL_DOMAIN + "send_comment.php";
+    private final static String URL_SEND_ERRCOMMENT ="";
 
     private final static String LOG_TAG = "NetworkHelper";
     private final static String ERRMSG_CONNECTION_FAILED = "Connection Error";
@@ -61,6 +62,10 @@ public class NetworkHelper {
 
     public void sendCommentData(Map<String, String> data) {
         asyncHttpGETRequest(URL_SEND_COMMENT, data, TAG_SEND_COMMENT);
+    }
+
+    public void senderrorComment(Map<String,String> data){
+        asyncHttpGETRequest(URL_SEND_ERRCOMMENT, data, TAG_SEND_COMMENT);
     }
 
     public String getLastGETResponse() {
