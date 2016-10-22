@@ -13,7 +13,7 @@ public class SQLiteHandler extends SQLiteOpenHelper{
     private static final String TAG = SQLiteHandler.class.getSimpleName();
     /* All Static Value for Setting SQLite Database */
     //Database Version
-    private static final short DATABASE_VERSION = 6;
+    private static final short DATABASE_VERSION = 7;
     //Database Name
     private static final String DATABASE_NAME = "Session";
     //Login Table Name
@@ -139,7 +139,18 @@ public class SQLiteHandler extends SQLiteOpenHelper{
         return photo;
     }
 
-    //Re create database Delete all tables and create them again
+    public String getMid(){
+        String query = "SELECT * FROM " + TABLE_USER;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(query, null);
+        String mid = null;
+        if (cursor.moveToFirst())
+            mid = cursor.getString(cursor.getColumnIndex("uid"));
+        db.close();
+        return mid;
+    }
+
+    //Re crate database Delete all tables and create them again
     public void deleteUsers() {
         SQLiteDatabase db = this.getWritableDatabase();
         // Delete All Rows

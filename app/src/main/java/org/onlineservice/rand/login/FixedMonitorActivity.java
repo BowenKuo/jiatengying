@@ -78,7 +78,7 @@ public class FixedMonitorActivity extends AppCompatActivity {
         rpm = (ScalableFrameLayout) findViewById(R.id.rpm);
         brake = (ScalableFrameLayout) findViewById(R.id.brake);
         dLight = (ScalableFrameLayout) findViewById(R.id.dLight);
-        frontLight = (ScalableFrameLayout) findViewById(R.id.frontFogLight);
+        frontLight = (ScalableFrameLayout) findViewById(R.id.bLight);
         fFogLight = (ScalableFrameLayout) findViewById(R.id.frontFogLight);
         bLight = (ScalableFrameLayout) findViewById(R.id.bLight);
         fuelLevel = (ScalableFrameLayout) findViewById(R.id.fuelLow);
@@ -98,7 +98,7 @@ public class FixedMonitorActivity extends AppCompatActivity {
         initFrameLayout(frameLayoutMap.get("引擎轉數"), R.mipmap.normalengine, "");
         initFrameLayout(frameLayoutMap.get("煞車"), R.mipmap.brake_disk_g, "");
         initFrameLayout(frameLayoutMap.get("方向燈"), R.mipmap.turn_signals_g, "");
-        initFrameLayout(frameLayoutMap.get("大燈"), R.mipmap.frontlightbad, "");
+        initFrameLayout(frameLayoutMap.get("大燈"), R.mipmap.parking_lights_g, "");
         initFrameLayout(frameLayoutMap.get("前霧燈"), R.mipmap.fog_light_g, "");
         initFrameLayout(frameLayoutMap.get("後霧燈"), R.mipmap.blightgood, "");
         initFrameLayout(frameLayoutMap.get("油耗"), R.mipmap.fuel_g, "");
@@ -246,11 +246,11 @@ public class FixedMonitorActivity extends AppCompatActivity {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            frameLayoutMap.get("油耗").setText(finalResult);
+                            frameLayoutMap.get("油耗").setText(finalResult + "     ");
                             if(value<=15){
-                                frameLayoutMap.get("油耗").setImageResource(R.mipmap.fuel_o);
-                            }else if (value<=30){
                                 frameLayoutMap.get("油耗").setImageResource(R.mipmap.fuel_r);
+                            }else if (value<=30){
+                                frameLayoutMap.get("油耗").setImageResource(R.mipmap.fuel_o);
                             }else {
                                 frameLayoutMap.get("油耗").setImageResource(R.mipmap.fuel_g);
                             }
@@ -258,7 +258,7 @@ public class FixedMonitorActivity extends AppCompatActivity {
                     });
 
                     try {
-                        Thread.sleep(60000);
+                        Thread.sleep(6000);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -281,13 +281,14 @@ public class FixedMonitorActivity extends AppCompatActivity {
 
                     final String finalResult = result;
                     final double value = Double.parseDouble(finalResult.replace("V",""));
+
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             frameLayoutMap.get("電瓶").setText(finalResult);
-                            if (value <= 11.15){
+                            if (value <= 12){
                                 frameLayoutMap.get("電瓶").setImageResource(R.mipmap.car_battery_r);
-                            }else if (value <=11.5){
+                            }else if (value <=15){
                                 frameLayoutMap.get("電瓶").setImageResource(R.mipmap.car_battery_o);
                             }else{
                                 frameLayoutMap.get("電瓶").setImageResource(R.mipmap.car_battery_g);
@@ -377,9 +378,9 @@ public class FixedMonitorActivity extends AppCompatActivity {
                                 //At good condition~
                                 frameLayoutMap.get("煞車").setImageResource(R.mipmap.brake_disk_g);
                                 frameLayoutMap.get("方向燈").setImageResource(R.mipmap.turn_signals_g);
-                                frameLayoutMap.get("大燈").setImageResource(R.mipmap.fflightgood);
+                                frameLayoutMap.get("大燈").setImageResource(R.mipmap.parking_lights_g);
                                 frameLayoutMap.get("前霧燈").setImageResource(R.mipmap.fog_light_g);
-                                frameLayoutMap.get("後霧燈").setImageResource(R.mipmap.fflightgood);
+                                //frameLayoutMap.get("後霧燈").setImageResource(R.mipmap.fflightgood);
                             }else{
                                 //TODO Change picture
                                 if (!isFogLampGood) {
@@ -388,13 +389,12 @@ public class FixedMonitorActivity extends AppCompatActivity {
                                 }
                                 if (!isBrakeGood){
                                     frameLayoutMap.get("煞車").setImageResource(R.mipmap.brake_disk_r);
-                                    Log.wtf("DIE","WELL");
-                                }
+                                                                    }
                                 if (!isHeadLampGood){
-                                    frameLayoutMap.get("大燈").setImageResource(R.mipmap.high_beam_r);
+                                    frameLayoutMap.get("大燈").setImageResource(R.mipmap.parking_lights_r);
                                 }
                                 if (!isTurnLampGood){
-                                    frameLayoutMap.get("方向燈").setImageResource(R.mipmap.dlightbad);
+                                    frameLayoutMap.get("方向燈").setImageResource(R.mipmap.turn_signals_r);
                                 }
                             }
                         }
@@ -452,15 +452,23 @@ public class FixedMonitorActivity extends AppCompatActivity {
                     }
 
                     final String finalResult = result;
+                    final int value = Integer.parseInt(finalResult.replace("C",""));
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-
+                            frameLayoutMap.get("水箱").setText(finalResult);
+                            if (value >95){
+                                frameLayoutMap.get("水箱").setImageResource(R.mipmap.water_tank_for_vehicles_r);
+                            }else if (value >85){
+                                frameLayoutMap.get("水箱").setImageResource(R.mipmap.water_tank_for_vehicles_o);
+                            }else{
+                                frameLayoutMap.get("水箱").setImageResource(R.mipmap.water_tank_for_vehicles_g);
+                            }
                         }
                     });
 
                     try {
-                        Thread.sleep(60000);
+                        Thread.sleep(6000);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -474,7 +482,7 @@ public class FixedMonitorActivity extends AppCompatActivity {
         voltageThread.start();
         dtcNumberThread.start();
         troubleCodeThread.start();
-        fuelPressureThread.start();
+//        fuelPressureThread.start();
         engineCoolantThread.start();
     }
 

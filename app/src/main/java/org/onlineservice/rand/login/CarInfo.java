@@ -16,6 +16,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -26,14 +28,32 @@ import android.widget.Toast;
 import com.github.pires.obd.commands.ObdCommand;
 import com.github.pires.obd.commands.control.DtcNumberCommand;
 import com.github.pires.obd.commands.control.TroubleCodesCommand;
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+
 import com.github.pires.obd.commands.protocol.EchoOffCommand;
 import com.github.pires.obd.commands.protocol.LineFeedOffCommand;
 import com.github.pires.obd.commands.protocol.SelectProtocolCommand;
 import com.github.pires.obd.enums.ObdProtocols;
 
+
 import java.io.ByteArrayOutputStream;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.UUID;
@@ -51,14 +71,21 @@ public class CarInfo extends Fragment implements SwipeRefreshLayout.OnRefreshLis
     private TextView carStatus;
     private ImageButton toMonitor, toRecord;
     private ListView listView;
+    RequestQueue mQueue;
+    private SQLiteHandler db;
+    private String ERROR_CODE_URL="https://whatsupbooboo.me/booboo/connect_db-shit/get_car_error.php";
+    private String mid;
+    private MyAdapter listAdapter;
     private BluetoothSocket socket;
     private Bitmap carBitmap;
+    String errorcodeS;
     //private BluetoothSocketSerializable socketSerializable;
     private String address = null;
     private String deviceAddress;
     private SQLiteHandler sdb;
     private SessionManager session;
     private BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
+    ArrayList<errorcodelist> error_code = new ArrayList<errorcodelist>();
 
     //Private methods
     private void initialize(@NonNull final View view){
@@ -75,6 +102,9 @@ public class CarInfo extends Fragment implements SwipeRefreshLayout.OnRefreshLis
 
         toMonitor.setOnClickListener(setToMonitorListener());
         toRecord.setOnClickListener(setToRecordListener());
+        mQueue = Volley.newRequestQueue(getActivity());
+        loadUI();
+        //Check Bluetooth Status
 
         sdb = new SQLiteHandler(getActivity().getApplicationContext());
         session = new SessionManager(getActivity().getApplicationContext());
@@ -92,6 +122,7 @@ public class CarInfo extends Fragment implements SwipeRefreshLayout.OnRefreshLis
                 startActivity(intentBt);
             }
         }
+
     }
 
     public void setCarImage() {
@@ -104,6 +135,8 @@ public class CarInfo extends Fragment implements SwipeRefreshLayout.OnRefreshLis
             startActivity(intent);
         } else {
             Log.w("Ya die", sdb.getMcarDetail().toString());
+
+            Log.w(" car info car details", sdb.getMcarDetail().toString());
             byte[] carPhoto = sdb.getMcarPhoto();
             if (carPhoto != null) {
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -254,7 +287,7 @@ public class CarInfo extends Fragment implements SwipeRefreshLayout.OnRefreshLis
                             .show();
                 }
 
-                Thread dtcNumberThread = new Thread(new Runnable() {
+                /*Thread dtcNumberThread = new Thread(new Runnable() {
                     @Override
                     public void run() {
                         String result = "";
@@ -276,7 +309,7 @@ public class CarInfo extends Fragment implements SwipeRefreshLayout.OnRefreshLis
                                         carStatus.setText("WEAK");
                                     }else
                                         carStatus.setText("GOOD");
-                                     */
+
                                 }
                             });
 
@@ -287,7 +320,7 @@ public class CarInfo extends Fragment implements SwipeRefreshLayout.OnRefreshLis
                             }
                         }
                     }
-                });
+                });*/
 
                 // Get TroubleCode
         Thread troubleCodeThread = new Thread(new Runnable() {
@@ -309,6 +342,18 @@ public class CarInfo extends Fragment implements SwipeRefreshLayout.OnRefreshLis
 
                         }
                     }
+
+                    final String finalResult1 = result;
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if(finalResult1.isEmpty()){
+                                carStatus.setText("Healthy");
+                            }else{
+                                carStatus.setText("Weak!");
+                            }
+                        }
+                    });
 
                     final String finalResult = result;
 
@@ -334,13 +379,21 @@ public class CarInfo extends Fragment implements SwipeRefreshLayout.OnRefreshLis
     //
 
     //Refresh UI
-    private void loadUI(){
-        //TODO  Get Obd2 trouble codes  ;  Load data from SQLite
+    private void loadUI() {
+        //TODO  Get Obd2 trouble codes  ;  Load data from Database
+        db = new SQLiteHandler(getActivity().getApplicationContext());
+        mid = db.getMid();
+//1        Log.w("fuck mid", mid);
+        get_error_code(mid);
+        Log.d("jdfidjfi","goodgoodeat");
+
     }
 
-    //Clear Trouble codes
+
+
+                //Clear Trouble codes
     private void clearTroubleCode(){
-        //TODO Clear all trouble code history ;  Clear data from SQLite
+        //TODO Clear all trouble code history ;  Clear data from Database
     }
 
     //Public methods
@@ -355,6 +408,84 @@ public class CarInfo extends Fragment implements SwipeRefreshLayout.OnRefreshLis
         return view;
     }
 
+    private void get_error_code(final String mid){
+        StringRequest strReq = new StringRequest(Request.Method.POST,
+                ERROR_CODE_URL, new Response.Listener<String>() {
+
+            @Override
+            public void onResponse(String response) {
+                try {
+                    Log.d("hello", response);
+                    JSONObject jObj = new JSONObject(response);
+                    boolean error = jObj.getBoolean("error");
+                    if (!error) {
+                        Log.d("ffffff","sadsdasde");
+                        JSONArray errorcode = jObj.getJSONArray("data");
+                        error_code.clear();
+
+
+                        for (int i = 0; i < errorcode.length(); i++) {
+                            JSONObject object = errorcode.optJSONObject(i);
+                            String objTimeValue = object.getString("ceTime");
+                            String objcodeValue = object.getString("errorcode");
+                            String objinfoValue = object.getString("einfo");
+                            errorcodeS = objcodeValue;
+                            byte ptext[];
+                            try {
+                                ptext = objinfoValue.getBytes("ISO-8859-1");
+                                String b = new String(ptext, "UTF-8");
+                                error_code.add(new errorcodelist(objcodeValue,b,objTimeValue));
+                            } catch (UnsupportedEncodingException e) {
+                                e.printStackTrace();
+                            }
+
+                            Log.d("errorlist", error_code.toString());
+                        }
+
+                    }
+
+                    listView = (ListView) listView.findViewById(R.id.troubleCodesHistory);
+                    listAdapter = new MyAdapter(getActivity(), error_code);
+                    listView.setAdapter(listAdapter);
+                    listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                            Intent intent = new Intent(getActivity(), ErrorcodeActivity.class);
+                            Bundle bundle = new Bundle();
+                            bundle.putString("Errorcode"     , error_code.get(position).getid());
+                            bundle.putString("Errorcodeinfo"   , error_code.get(position).getinfo());
+                            intent.putExtras(bundle);
+                            Log.d("選擇的",error_code.get(position).getid());
+                            Toast.makeText(getActivity().getApplicationContext(), "你選擇的是" + error_code.get(position).getid(), Toast.LENGTH_SHORT).show();
+                            startActivity(intent);
+
+
+                        }
+                    });
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("錯誤", error.getMessage(), error);
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                // Posting parameters to car types url
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("mId", mid);
+
+                return params;
+            }
+        };
+//Creating a Request Queue
+//        RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
+        mQueue.add(strReq);
+    }
 
     @Override
     public void onRefresh() {

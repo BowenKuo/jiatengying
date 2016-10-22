@@ -1,0 +1,15 @@
+﻿kit
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+# On branch master
+# Your branch and 'origin/master' have diverged,
+# and have 2 and 6 different commits each, respectively.
+#   (use "git pull" to merge the remote branch into yours)
+#
+# Changes to be committed:
+#	modified:   app/src/main/AndroidManifest.xml
+#	modified:   app/src/main/java/org/onlineservice/rand/login/CarInfo.java
+#	new file:   app/src/main/java/org/onlineservice/rand/login/FixedMonitorActivity.java
+#	modified:   app/src/main/res/layout/activity_monitor_fixed.xml
+#
+
