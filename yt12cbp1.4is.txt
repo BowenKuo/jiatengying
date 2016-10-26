@@ -1,0 +1,41 @@
+﻿Merge branch 'master' of https://github.com/BowenKuo/jiatengying
+Rand is the key.
+# Conflicts:
+#	app/src/main/java/org/onlineservice/rand/login/CarInfo.java
+#
+# It looks like you may be committing a merge.
+# If this is not correct, please remove the file
+#	.git/MERGE_HEAD
+# and try again.
+
+
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+# On branch master
+# Your branch and 'origin/master' have diverged,
+# and have 3 and 6 different commits each, respectively.
+#   (use "git pull" to merge the remote branch into yours)
+#
+# All conflicts fixed but you are still merging.
+#
+# Changes to be committed:
+#	modified:   app/src/main/AndroidManifest.xml
+#	modified:   app/src/main/java/helper/SQLiteHandler.java
+#	modified:   app/src/main/java/org/onlineservice/rand/login/CarInfo.java
+#	new file:   app/src/main/java/org/onlineservice/rand/login/ErrorcodeActivity.java
+#	new file:   app/src/main/java/org/onlineservice/rand/login/Errorcomment.java
+#	new file:   app/src/main/java/org/onlineservice/rand/login/ErrorcommentAdapter.java
+#	modified:   app/src/main/java/org/onlineservice/rand/login/FixedMonitorActivity.java
+#	new file:   app/src/main/java/org/onlineservice/rand/login/MyAdapter.java
+#	modified:   app/src/main/java/org/onlineservice/rand/login/NetworkHelper.java
+#	new file:   app/src/main/java/org/onlineservice/rand/login/errorcodelist.java
+#	modified:   app/src/main/res/layout/activity_carinfo.xml
+#	new file:   app/src/main/res/layout/activity_errorcode.xml
+#	modified:   app/src/main/res/layout/activity_garageinfo.xml
+#	new file:   app/src/main/res/layout/error_comment_list.xml
+#	new file:   app/src/main/res/layout/errorcode_list_view.xml
+#	modified:   app/src/main/res/layout/maintain_history.xml
+#	new file:   app/src/main/res/layout/write_errcomment.xml
+#	new file:   nsimlqim.qm5.txt
+#
+

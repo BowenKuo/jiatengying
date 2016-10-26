@@ -35,7 +35,9 @@ import com.github.pires.obd.commands.temperature.EngineCoolantTemperatureCommand
 import com.github.pires.obd.enums.ObdProtocols;
 
 import java.io.IOException;
+import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -69,6 +71,8 @@ public class MonitorActivity extends AppCompatActivity {
     private boolean isFogLampGood = true;
     private boolean isTurnLampGood = true;
     private boolean isHeadLampGood = true;
+
+    private ArrayList<CharSequence> troubleCodeList = new ArrayList<>();
 
 
     //Private Method
@@ -486,7 +490,7 @@ public class MonitorActivity extends AppCompatActivity {
         });
 
         // Get TroubleCode
-        Thread troubleCodeThread = new Thread(new Runnable() {
+        final Thread troubleCodeThread = new Thread(new Runnable() {
             @Override
             public void run() {
                 String result = "";
@@ -504,6 +508,7 @@ public class MonitorActivity extends AppCompatActivity {
                         Log.wtf("DIE!!",result);
                         while(tokenizer.hasMoreTokens()){
                             String tmp = tokenizer.nextToken();
+                            troubleCodeList.add(tmp);
                             if (tmp.equalsIgnoreCase(fogTroubleCode)){
                                 isFogLampGood = false;
                             }else if(tmp.equalsIgnoreCase(brakeTroubleCode)){
@@ -517,6 +522,12 @@ public class MonitorActivity extends AppCompatActivity {
                                 doNothing();
                             }
                         }
+                    }
+                    // Handle writeIntoDB exception
+                    try {
+                        writeIntoDB(troubleCodeList, DateFormat.getDateInstance().format(new Date()));
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
 
                     final String finalResult = result;
@@ -637,6 +648,15 @@ public class MonitorActivity extends AppCompatActivity {
 
     private void doNothing(){
         //TODO nothing
+    }
+
+    private synchronized void writeIntoDB(@NonNull final ArrayList<CharSequence> result,
+                                          @NonNull final String currentDateString)
+            throws Exception{
+        //TODO  Write data to database
+        for (CharSequence token : result){
+            Log.e(currentDateString,token.toString());
+        }
     }
 
     //Override Methods

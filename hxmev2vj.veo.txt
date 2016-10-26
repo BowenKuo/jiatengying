@@ -1,0 +1,19 @@
+﻿Add Method writeIntoDB, not implement yet
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+# On branch master
+# Your branch is up-to-date with 'origin/master'.
+#
+# Changes to be committed:
+#	modified:   app/src/main/java/org/onlineservice/rand/login/CarInfo.java
+#	modified:   app/src/main/java/org/onlineservice/rand/login/FixedMonitorActivity.java
+#	modified:   app/src/main/java/org/onlineservice/rand/login/MonitorActivity.java
+#	new file:   app/src/main/res/mipmap-mdpi/malfunction_indicador_g.png
+#	new file:   app/src/main/res/mipmap-mdpi/malfunction_indicador_o.png
+#	new file:   app/src/main/res/mipmap-mdpi/malfunction_indicador_r.png
+#	new file:   yt12cbp1.4is.txt
+#
+# Untracked files:
+#	pvyo3bgr.1pb.txt
+#
+

@@ -95,7 +95,7 @@ public class FixedMonitorActivity extends AppCompatActivity {
 
         initFrameLayout(frameLayoutMap.get("水箱"), R.mipmap.water_tank_for_vehicles_g, "");
         initFrameLayout(frameLayoutMap.get("電瓶"), R.mipmap.car_battery_g, "");
-        initFrameLayout(frameLayoutMap.get("引擎轉數"), R.mipmap.normalengine, "");
+        initFrameLayout(frameLayoutMap.get("引擎轉數"), R.mipmap.malfunction_indicador_g, "");
         initFrameLayout(frameLayoutMap.get("煞車"), R.mipmap.brake_disk_g, "");
         initFrameLayout(frameLayoutMap.get("方向燈"), R.mipmap.turn_signals_g, "");
         initFrameLayout(frameLayoutMap.get("大燈"), R.mipmap.parking_lights_g, "");

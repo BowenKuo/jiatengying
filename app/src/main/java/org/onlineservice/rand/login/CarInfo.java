@@ -347,6 +347,7 @@ public class CarInfo extends Fragment implements SwipeRefreshLayout.OnRefreshLis
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
+                            Log.e(finalResult1,"");
                             if(finalResult1.isEmpty()){
                                 carStatus.setText("Healthy");
                             }else{
@@ -355,10 +356,8 @@ public class CarInfo extends Fragment implements SwipeRefreshLayout.OnRefreshLis
                         }
                     });
 
-                    final String finalResult = result;
-
                     try {
-                        Thread.sleep(6000);
+                        Thread.sleep(1000);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -367,6 +366,7 @@ public class CarInfo extends Fragment implements SwipeRefreshLayout.OnRefreshLis
         });
 
                 //dtcNumberThread.run();
+                //troubleCodeThread.run();
 
             }
         });
