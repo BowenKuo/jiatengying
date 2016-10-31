@@ -13,7 +13,7 @@ public class SQLiteHandler extends SQLiteOpenHelper{
     private static final String TAG = SQLiteHandler.class.getSimpleName();
     /* All Static Value for Setting SQLite Database */
     //Database Version
-    private static final short DATABASE_VERSION = 7;
+    private static final short DATABASE_VERSION = 8;
     //Database Name
     private static final String DATABASE_NAME = "Session";
     //Login Table Name

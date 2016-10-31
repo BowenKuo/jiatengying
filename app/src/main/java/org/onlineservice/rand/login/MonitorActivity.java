@@ -3,13 +3,10 @@ package org.onlineservice.rand.login;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.OperationApplicationException;
 import android.os.Bundle;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -20,6 +17,13 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.github.pires.obd.commands.ObdCommand;
 import com.github.pires.obd.commands.SpeedCommand;
 import com.github.pires.obd.commands.control.DtcNumberCommand;
@@ -34,22 +38,26 @@ import com.github.pires.obd.commands.protocol.SelectProtocolCommand;
 import com.github.pires.obd.commands.temperature.EngineCoolantTemperatureCommand;
 import com.github.pires.obd.enums.ObdProtocols;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.UUID;
 
-import helper.BluetoothSocketSerializable;
+import helper.SQLiteHandler;
 
 /**
  * Created by Rand on 2016/9/13. Outrageous~~
  */
 public class MonitorActivity extends AppCompatActivity {
+    //Value
+    private final String CAR_ERROR_CODE_RT_URL = "https://whatsupbooboo.me/booboo/connect_db-shit/add_car_error_real_time.php";
     //Variables
     private Button button;
     private Button confirm;
@@ -71,6 +79,9 @@ public class MonitorActivity extends AppCompatActivity {
     private boolean isFogLampGood = true;
     private boolean isTurnLampGood = true;
     private boolean isHeadLampGood = true;
+
+    RequestQueue mQueue;
+    private SQLiteHandler sdb;
 
     private ArrayList<CharSequence> troubleCodeList = new ArrayList<>();
 
@@ -129,6 +140,9 @@ public class MonitorActivity extends AppCompatActivity {
         initFrameLayout(frameLayoutMap.get("後霧燈"), R.mipmap.blightgood, "test");
         initFrameLayout(frameLayoutMap.get("故障時行車距離"), R.mipmap.toolongtime, "test");
         initFrameLayout(frameLayoutMap.get("油耗"), R.mipmap.fuel_g, "test");
+
+        mQueue = Volley.newRequestQueue(this);
+        sdb = new SQLiteHandler(getApplicationContext());
 
         adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_multiple_choice,
                 frameLayoutMap.keySet().toArray());
@@ -654,9 +668,53 @@ public class MonitorActivity extends AppCompatActivity {
                                           @NonNull final String currentDateString)
             throws Exception{
         //TODO  Write data to database
+        String mId = sdb.getMid();
         for (CharSequence token : result){
+            // insert error code to database
+            add_error_code_to_database((String) token, mId, currentDateString);
             Log.e(currentDateString,token.toString());
         }
+    }
+
+    private void add_error_code_to_database(final String error_code,
+                                            final String mId,
+                                            final String datetime) {
+        StringRequest strReq = new StringRequest(Request.Method.POST,
+                CAR_ERROR_CODE_RT_URL, new Response.Listener<String>() {
+
+            @Override
+            public void onResponse(String response) {
+                try {
+                    JSONObject jObj = new JSONObject(response);
+                    boolean error = jObj.getBoolean("error");
+                    if (!error) {
+                        Toast.makeText(getApplicationContext(), "錯誤碼"+ error_code + "發生於" + datetime, Toast.LENGTH_LONG);
+                    } else {
+                        Toast.makeText(getApplicationContext(), "錯誤碼"+ error_code + "發生於~~" + datetime, Toast.LENGTH_LONG);
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("錯誤", error.getMessage(), error);
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                // Posting parameters to car types url
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("mId", mId);
+                params.put("errorCode", error_code);
+                params.put("datetime", datetime);
+                return params;
+            }
+        };
+
+        mQueue.add(strReq);
     }
 
     //Override Methods
