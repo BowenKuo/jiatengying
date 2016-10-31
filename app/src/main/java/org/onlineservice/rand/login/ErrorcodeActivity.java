@@ -3,23 +3,18 @@ package org.onlineservice.rand.login;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.app.ProgressDialog;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.RatingBar;
 import android.widget.TextView;
-import android.widget.Toast;
-import android.os.Handler;
+
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -56,7 +51,7 @@ public class ErrorcodeActivity extends AppCompatActivity {
     RequestQueue mQueue;
     SQLiteHandler sdb;
     private ProgressDialog pDialog;
-    String SEND_COMMENT_URL = "https://whatsupbooboo.me/booboo/connect_db-shit/send_car_error_comment.php";
+    String SEND_COMMENT_URL = "https://whatsupbooboo.me/booboo/connect_db-shit/sent_car_error_comment.php";
     String ERROR_CODE_COMMENT_URL = "https://whatsupbooboo.me/booboo/connect_db-shit/get_car_error_comment.php";
     ArrayList<Errorcomment> error_comment = new ArrayList<Errorcomment>();
 
