@@ -32,6 +32,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -66,7 +67,11 @@ public class ErrorcodeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_errorcode);
         sdb = new SQLiteHandler(this.getApplicationContext());
-        mid = sdb.getMid();
+        try {
+            mid = sdb.getMid();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         Bundle bundle = getIntent().getExtras();
         err_id      = bundle.getString("Errorcode");
         err_info    = bundle.getString("Errorcodeinfo");

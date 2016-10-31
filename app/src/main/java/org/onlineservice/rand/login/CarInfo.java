@@ -166,7 +166,7 @@ public class CarInfo extends Fragment implements SwipeRefreshLayout.OnRefreshLis
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                    Intent intent = new Intent(getContext(),FixedMonitorActivity.class);
+                    Intent intent = new Intent(getContext(),MonitorActivity.class);
 //                    socketSerializable = new BluetoothSocketSerializable(socket);
                     intent.putExtra("bluetoothSocket",address.toString());
 //                   // Log.e("test",(String) intent.getExtras().get("bluetoothSocket"));
@@ -382,7 +382,11 @@ public class CarInfo extends Fragment implements SwipeRefreshLayout.OnRefreshLis
     private void loadUI() {
         //TODO  Get Obd2 trouble codes  ;  Load data from Database
         db = new SQLiteHandler(getActivity().getApplicationContext());
-        mid = db.getMid();
+        try {
+            mid = db.getMid();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 //1        Log.w("fuck mid", mid);
         get_error_code(mid);
         Log.d("jdfidjfi","goodgoodeat");

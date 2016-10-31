@@ -45,6 +45,7 @@ import java.util.StringTokenizer;
 import java.util.UUID;
 
 import helper.BluetoothSocketSerializable;
+import helper.SQLiteHandler;
 
 /**
  * Created by Rand on 2016/9/13. Outrageous~~
@@ -73,7 +74,7 @@ public class MonitorActivity extends AppCompatActivity {
     private boolean isHeadLampGood = true;
 
     private ArrayList<CharSequence> troubleCodeList = new ArrayList<>();
-
+    private SQLiteHandler db = new SQLiteHandler(getApplicationContext());
 
     //Private Method
     private void initialize() {
@@ -525,7 +526,7 @@ public class MonitorActivity extends AppCompatActivity {
                     }
                     // Handle writeIntoDB exception
                     try {
-                        writeIntoDB(troubleCodeList, DateFormat.getDateInstance().format(new Date()));
+                        writeIntoDB(db.getMid(),troubleCodeList, DateFormat.getDateInstance().format(new Date()));
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -650,12 +651,13 @@ public class MonitorActivity extends AppCompatActivity {
         //TODO nothing
     }
 
-    private synchronized void writeIntoDB(@NonNull final ArrayList<CharSequence> result,
+    private synchronized void writeIntoDB(@NonNull final CharSequence mid,
+                                          @NonNull final ArrayList<CharSequence> result,
                                           @NonNull final String currentDateString)
             throws Exception{
         //TODO  Write data to database
         for (CharSequence token : result){
-            Log.e(currentDateString,token.toString());
+            Log.e(currentDateString,token.toString() + mid.toString());
         }
     }
 
