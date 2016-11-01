@@ -151,6 +151,7 @@ public class SQLiteHandler extends SQLiteOpenHelper{
             throw new IOException("mId is invalid");
         }
         db.close();
+        cursor.close();
         return mid;
     }
 
