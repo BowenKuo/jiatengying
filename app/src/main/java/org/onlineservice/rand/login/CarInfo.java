@@ -166,7 +166,7 @@ public class CarInfo extends Fragment implements SwipeRefreshLayout.OnRefreshLis
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                    Intent intent = new Intent(getContext(),MonitorActivity.class);
+                    Intent intent = new Intent(getContext(),FixedMonitorActivity.class);
 //                    socketSerializable = new BluetoothSocketSerializable(socket);
                     intent.putExtra("bluetoothSocket",address.toString());
 //                   // Log.e("test",(String) intent.getExtras().get("bluetoothSocket"));

@@ -541,6 +541,7 @@ public class MonitorActivity extends AppCompatActivity {
                         writeIntoDB(troubleCodeList, DateFormat.getDateInstance().format(new Date()));
                         troubleCodeList.clear();
                     } catch (Exception e) {
+                        Log.e("Ya die", "DIEDIEDIEDIEDIEDIE");
                         e.printStackTrace();
                         troubleCodeList.clear();
                     }
