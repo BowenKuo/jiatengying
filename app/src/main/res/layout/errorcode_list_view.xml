@@ -15,9 +15,9 @@
     <RelativeLayout
         android:orientation="vertical"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="75dp"
         android:elevation="1dp"
-        android:padding="10dp">
+        android:padding="5dp">
 
     <TextView
         android:layout_width="wrap_content"
@@ -25,7 +25,6 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="錯誤碼"
         android:id="@+id/ecid"
-        android:layout_alignParentTop="true"
         android:layout_alignParentStart="true"
         android:paddingStart="15dp"
         android:paddingTop="10dp"
@@ -33,7 +32,8 @@
         android:gravity="center_vertical"
         android:layout_alignParentLeft="true"
         android:paddingLeft="15dp"
-        android:textColor="@android:color/primary_text_light" />
+        android:textColor="@android:color/primary_text_light"
+        android:layout_alignParentTop="true" />
 
     <TextView
         android:layout_width="wrap_content"

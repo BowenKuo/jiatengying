@@ -3,6 +3,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
 
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/gg"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -64,10 +65,11 @@
 
         </TableRow>
     -->
+
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="180dp"
+        android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
@@ -94,60 +96,28 @@
 
     </LinearLayout>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="@string/dtcHistoryTitle"
-        android:id="@+id/textView4"
-        android:textSize="22dp"
-        android:layout_below="@+id/linearLayout2"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="20dp"
-        android:textColor="@color/colorPrimaryDark"
-        android:textStyle="bold"
-        android:paddingStart="30dp"
-        android:paddingLeft="30dp" />
-
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/clearHistory"
-        android:src="@drawable/can"
-        android:layout_alignTop="@+id/textView4"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:clickable="true"
-        android:paddingEnd="25dp"
-        android:paddingRight="25dp" />
+    <!--<ImageView-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:id="@+id/clearHistory"-->
+        <!--android:src="@drawable/can"-->
+        <!--android:layout_alignTop="@+id/textView4"-->
+        <!--android:layout_alignParentRight="true"-->
+        <!--android:layout_alignParentEnd="true"-->
+        <!--android:clickable="true"-->
+        <!--android:paddingEnd="25dp"-->
+        <!--android:paddingRight="25dp" />-->
 
 
 
     <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="70dp"
-        android:orientation="horizontal"
-        android:layout_alignBottom="@+id/linearLayout3"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:id="@+id/linearLayout3"
-        android:layout_marginBottom="-10dp">
-
-    </LinearLayout>
-
-<LinearLayout
+    android:id="@+id/cardlist"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_below="@+id/clearHistory"
-    android:layout_alignParentRight="true"
-    android:layout_alignParentEnd="true"
-    android:layout_above="@+id/linearLayout3">
+    android:layout_below="@+id/textView4">
     <ListView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="320dp"
         android:id="@+id/troubleCodesHistory"
         android:paddingStart="20dp"
         android:scrollbars="horizontal"
@@ -158,32 +128,58 @@
         android:layout_above="@+id/linearLayout3" />
 </LinearLayout>
 
-    <ImageButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/toMonitor"
-        android:clickable="true"
-        android:layout_weight="1"
-        android:src="@drawable/dashboard"
-        android:background="@color/white"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignRight="@+id/textView4"
-        android:layout_alignEnd="@+id/textView4" />
 
-    <ImageButton
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/toRecord"
-        android:clickable="true"
-        android:layout_weight="1"
-        android:src="@drawable/record"
-        android:background="@color/white"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_toRightOf="@+id/toMonitor"
-        android:layout_toEndOf="@+id/toMonitor" />
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/dtcHistoryTitle"
+        android:id="@+id/textView4"
+        android:textSize="22dp"
+        android:textColor="@color/colorPrimaryDark"
+        android:textStyle="bold"
+        android:paddingStart="30dp"
+        android:paddingLeft="30dp"
+        android:layout_below="@+id/linearbottom"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <LinearLayout
+        android:id="@+id/linearbottom"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_below="@+id/linearLayout2"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="45dp"
+            android:id="@+id/toMonitor"
+            android:clickable="true"
+            android:layout_weight="1"
+            android:src="@drawable/db"
+            android:background="@color/white"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignRight="@+id/textView4"
+            android:layout_alignEnd="@+id/textView4" />
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="45dp"
+            android:id="@+id/toRecord"
+            android:clickable="true"
+            android:layout_weight="1"
+            android:src="@drawable/rc"
+            android:background="@color/white"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_toRightOf="@+id/toMonitor"
+            android:layout_toEndOf="@+id/toMonitor" />
+    </LinearLayout>
+
 
 </RelativeLayout>

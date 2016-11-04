@@ -16,7 +16,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
@@ -25,9 +24,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.github.pires.obd.commands.ObdCommand;
-import com.github.pires.obd.commands.control.DtcNumberCommand;
-import com.github.pires.obd.commands.control.TroubleCodesCommand;
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -35,20 +31,18 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-
+import com.github.pires.obd.commands.ObdCommand;
+import com.github.pires.obd.commands.control.TroubleCodesCommand;
 import com.github.pires.obd.commands.protocol.EchoOffCommand;
 import com.github.pires.obd.commands.protocol.LineFeedOffCommand;
 import com.github.pires.obd.commands.protocol.SelectProtocolCommand;
 import com.github.pires.obd.enums.ObdProtocols;
 
-
-import java.io.ByteArrayOutputStream;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -90,14 +84,14 @@ public class CarInfo extends Fragment implements SwipeRefreshLayout.OnRefreshLis
     //Private methods
     private void initialize(@NonNull final View view){
         carPicture = (ImageView) view.findViewById(R.id.carPicture);
-        clearHistory = (ImageView) view.findViewById(R.id.clearHistory);
+//        clearHistory = (ImageView) view.findViewById(R.id.clearHistory);
         carStatus = (TextView) view.findViewById(R.id.carStatus);
         toMonitor = (ImageButton) view.findViewById(R.id.toMonitor);
         toRecord = (ImageButton) view.findViewById(R.id.toRecord);
         listView = (ListView) view.findViewById(R.id.troubleCodesHistory);
 
         carPicture.setOnClickListener(setCarPictureListener());
-        clearHistory.setOnClickListener(setClearHistoryListener());
+//        clearHistory.setOnClickListener(setClearHistoryListener());
         carStatus.setOnClickListener(setCarStatusListener());
 
         toMonitor.setOnClickListener(setToMonitorListener());

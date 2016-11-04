@@ -21,7 +21,7 @@
         android:layout_alignParentEnd="true" />
 
     <view
-        android:src="@drawable/record"
+        android:src="@drawable/rc"
         class="org.onlineservice.rand.login.ScalableFrameLayout"
         android:id="@+id/radiator"
         android:layout_width="185dp"
