@@ -377,7 +377,6 @@ public class FixedMonitorActivity extends AppCompatActivity {
                     if (!result.isEmpty()){
                         //TODO Tokenize the trouble code
                         StringTokenizer tokenizer = new StringTokenizer(result);
-                        Log.wtf("DIE!!",result);
                         while(tokenizer.hasMoreTokens()){
                             String tmp = tokenizer.nextToken();
                             troubleCodeList.add(tmp);
@@ -428,6 +427,7 @@ public class FixedMonitorActivity extends AppCompatActivity {
 
                     try {
                         //writeIntoDB(troubleCodeList, DateFormat.getDateInstance().format(new Date()));
+                        Log.e("LIVE","ENTER");
                         writeIntoDB(troubleCodeList,new java.sql.Timestamp(new Date().getTime()).toString());
                         troubleCodeList.clear();
                     } catch (Exception e) {
@@ -533,6 +533,7 @@ public class FixedMonitorActivity extends AppCompatActivity {
         //TODO  Write data to database
         Log.e("ARRAY",result.toString() + "--" + currentDateString);
         String mId = sdb.getMid();
+        Log.e("ENTER","CAN YOU HEAR ME???");
         for (CharSequence token : result){
             // insert error code to database
             add_error_code_to_database((String) token, mId, currentDateString);
@@ -544,24 +545,29 @@ public class FixedMonitorActivity extends AppCompatActivity {
     private synchronized void add_error_code_to_database(final String error_code,
                                             final String mId,
                                             final String datetime) {
+        Log.e("Enter add","LIVE");
         StringRequest strReq = new StringRequest(Request.Method.POST,
                 CAR_ERROR_CODE_RT_URL, new Response.Listener<String>() {
 
             @Override
             public void onResponse(String response) {
                 try {
+                    Log.e("ENTER onResponse",response);
                     JSONObject jObj = new JSONObject(response);
                     boolean error = jObj.getBoolean("error");
                     Log.e("RESPONSE",response);
                     if (!error) {
+                        Log.e("Nothing", String.valueOf(response.hashCode()));
                         Toast.makeText(getApplicationContext(), "錯誤碼"+ error_code
                                 + "發生於" + datetime, Toast.LENGTH_LONG).show();
                     } else {
+                        Log.e("DIE?","Ya die");
                         Toast.makeText(getApplicationContext(), "錯誤碼"+ error_code
                                 + "發生於~~" + datetime, Toast.LENGTH_LONG).show();
                     }
 
                 } catch (JSONException e) {
+                    Log.e("Ya die!!!!",e.toString());
                     e.printStackTrace();
                 }
             }
