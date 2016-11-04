@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import java.io.IOException;
 import java.util.HashMap;
 
 public class SQLiteHandler extends SQLiteOpenHelper{
@@ -139,14 +140,18 @@ public class SQLiteHandler extends SQLiteOpenHelper{
         return photo;
     }
 
-    public String getMid(){
+    public String getMid() throws IOException {
         String query = "SELECT * FROM " + TABLE_USER;
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(query, null);
         String mid = null;
         if (cursor.moveToFirst())
             mid = cursor.getString(cursor.getColumnIndex("uid"));
+        if (mid == null || mid.isEmpty()){
+            throw new IOException("mId is invalid");
+        }
         db.close();
+        cursor.close();
         return mid;
     }
 

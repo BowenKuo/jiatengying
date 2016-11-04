@@ -376,7 +376,11 @@ public class CarInfo extends Fragment implements SwipeRefreshLayout.OnRefreshLis
     private void loadUI() {
         //TODO  Get Obd2 trouble codes  ;  Load data from Database
         db = new SQLiteHandler(getActivity().getApplicationContext());
-        mid = db.getMid();
+        try {
+            mid = db.getMid();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 //1        Log.w("fuck mid", mid);
         get_error_code(mid);
         Log.d("jdfidjfi","goodgoodeat");

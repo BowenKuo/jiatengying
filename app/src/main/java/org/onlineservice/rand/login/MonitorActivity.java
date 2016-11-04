@@ -85,7 +85,6 @@ public class MonitorActivity extends AppCompatActivity {
 
     private ArrayList<CharSequence> troubleCodeList = new ArrayList<>();
 
-
     //Private Method
     private void initialize() {
         Intent intent = getIntent();
@@ -540,8 +539,11 @@ public class MonitorActivity extends AppCompatActivity {
                     // Handle writeIntoDB exception
                     try {
                         writeIntoDB(troubleCodeList, DateFormat.getDateInstance().format(new Date()));
+                        troubleCodeList.clear();
                     } catch (Exception e) {
+                        Log.e("Ya die", "DIEDIEDIEDIEDIEDIE");
                         e.printStackTrace();
+                        troubleCodeList.clear();
                     }
 
                     final String finalResult = result;
@@ -576,7 +578,7 @@ public class MonitorActivity extends AppCompatActivity {
                     });
 
                     try {
-                        Thread.sleep(6000);
+                        Thread.sleep(600);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -668,11 +670,13 @@ public class MonitorActivity extends AppCompatActivity {
                                           @NonNull final String currentDateString)
             throws Exception{
         //TODO  Write data to database
+        Log.e("ARRAY",result.toString() + "--" + currentDateString);
         String mId = sdb.getMid();
         for (CharSequence token : result){
             // insert error code to database
             add_error_code_to_database((String) token, mId, currentDateString);
             Log.e(currentDateString,token.toString());
+
         }
     }
 
