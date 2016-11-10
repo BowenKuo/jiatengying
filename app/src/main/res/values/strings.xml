@@ -1,7 +1,7 @@
 <resources>
     <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">AIzaSyC9RZ2X9AU3r798fU7kkV-4u4i_ghh2yVE</string>
 
-    <string name="app_name">WuzupBooBoo</string>
+    <string name="app_name">WhatsUpBooBoo</string>
     <string name="hint_email">Email</string>
     <string name="hint_password">Password</string>
     <string name="hint_confirm">Confirm</string>

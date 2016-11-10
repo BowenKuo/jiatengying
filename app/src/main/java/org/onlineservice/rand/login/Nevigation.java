@@ -98,30 +98,37 @@ public class Nevigation extends Fragment implements OnMapReadyCallback, GoogleAp
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextChange(String input) {
-                mMap.clear();
+                if( !input.isEmpty() ) {
+                    if(mMap!=null)
+                        mMap.clear();
 //                LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, nevigation);
-                new TaskLocationSearch(input, lastLocation) {
-                    @Override
-                    protected void onResult() {
-                        searchView.setSuggestionsAdapter(new CursorAdapter(thisActivity, super.mc, Cursor.FIELD_TYPE_STRING) {
-                            @Override
-                            public View newView(Context context, Cursor cursor, ViewGroup viewGroup) {
-                                return LayoutInflater.from(thisActivity).inflate(R.layout.suggestion_list, viewGroup, false);
-                            }
+                    new TaskLocationSearch(input, lastLocation) {
+                        @Override
+                        protected void onResult() {
+                            searchView.setSuggestionsAdapter(new CursorAdapter(thisActivity, super.mc, Cursor.FIELD_TYPE_STRING) {
+                                @Override
+                                public View newView(Context context, Cursor cursor, ViewGroup viewGroup) {
+                                    return LayoutInflater.from(thisActivity).inflate(R.layout.suggestion_list, viewGroup, false);
+                                }
 
-                            @Override
-                            public void bindView(View view, Context context, Cursor cursor) {
-                                TextView locName = (TextView) view.findViewById(R.id.locName);
-                                String s = cursor.getString(cursor.getColumnIndexOrThrow("name")) + " - " + cursor.getString(cursor.getColumnIndexOrThrow("dist")) + " KM";
-                                locName.setText(s);
-                                TextView locDesc = (TextView) view.findViewById(R.id.locDesc);
-                                locDesc.setText(cursor.getString(cursor.getColumnIndexOrThrow("desc")));
-                            }
-                        });
-                        results = super.getResult();
+                                @Override
+                                public void bindView(View view, Context context, Cursor cursor) {
+                                    TextView locName = (TextView) view.findViewById(R.id.locName);
+                                    String s = cursor.getString(cursor.getColumnIndexOrThrow("name")) + " - " + cursor.getString(cursor.getColumnIndexOrThrow("dist")) + " KM";
+                                    locName.setText(s);
+                                    TextView locDesc = (TextView) view.findViewById(R.id.locDesc);
+                                    locDesc.setText(cursor.getString(cursor.getColumnIndexOrThrow("desc")));
+                                }
+                            });
+                            results = super.getResult();
 //                        Toast.makeText(thisActivity, "TEST", Toast.LENGTH_LONG).show();
-                    }
-                }.execute();
+                        }
+                    }.execute();
+                }
+                else {
+                    if(mMap!=null)
+                        mMap.clear();
+                }
                 return true;
             }
 
